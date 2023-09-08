@@ -41,6 +41,10 @@ dependencies {
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB
 	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.5'
 
+	//slf4j&Logback 설정
+	implementation 'org.slf4j:slf4j-api:1.7.32'
+	implementation 'ch.qos.logback:logback-classic:1.2.6'
+
 
 }
 
