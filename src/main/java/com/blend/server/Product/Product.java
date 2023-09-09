@@ -1,19 +1,16 @@
 package com.blend.server.Product;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import com.blend.server.Product.global.audit.Auditable;
+import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 @Setter
+@Getter
 @Entity
-public class Product {
+public class Product extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,10 +41,6 @@ public class Product {
     private String info;
 
     private String sizeInfo;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime modifiedAt;
 
     @Enumerated(value = EnumType.STRING)
     private ProductStatus productStatus = ProductStatus.SALE;

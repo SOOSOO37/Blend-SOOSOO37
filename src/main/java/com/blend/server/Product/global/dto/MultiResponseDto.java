@@ -1,4 +1,4 @@
-package com.blend.server.Product;
+package com.blend.server.Product.global.dto;
 
 import lombok.Getter;
 import org.springframework.data.domain.Page;

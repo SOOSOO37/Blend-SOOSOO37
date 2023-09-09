@@ -1,6 +1,9 @@
 package com.blend.server.Product;
 
+import com.blend.server.Product.global.exception.BusinessLogicException;
+import com.blend.server.Product.global.exception.ExceptionCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -8,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -23,51 +25,29 @@ public class ProductService {
 
     }
 
-    public Product createProduct(Product product){
+    public Product createProduct(Product product) {
         log.info("---Creating Product---");
 
         return productRepository.save(product);
     }
 
-    public Product updateProduct(Product product){
+    public Product updateProduct(long id,Product product) {
         log.info("---Updating Product---");
 
-        Product findProduct = findVerifiedProduct(product.getId());
+        Product findProduct = findVerifiedProduct(id);
 
-        Optional.ofNullable(product.getBrand())
-                .ifPresent(brand -> findProduct.setBrand(brand));
-        Optional.ofNullable(product.getProductName())
-                .ifPresent(productName -> findProduct.setProductName(productName));
-        Optional.ofNullable(product.getCategory())
-                .ifPresent(category -> findProduct.setCategory(category));
-        Optional.ofNullable(product.getRanking())
-                .ifPresent(ranking -> findProduct.setRanking(ranking));
-        Optional.ofNullable(product.getPrice())
-                .ifPresent(price -> findProduct.setPrice(price));
-        Optional.ofNullable(product.getSalePrice())
-                .ifPresent(salePrice -> findProduct.setSalePrice(salePrice));
-        Optional.ofNullable(product.getImage())
-                .ifPresent(image -> findProduct.setImage(image));
-        Optional.ofNullable(product.getInfo())
-                .ifPresent(info -> findProduct.setInfo(info));
-        Optional.ofNullable(product.getSizeInfo())
-                .ifPresent(sizeInfo -> findProduct.setSizeInfo(sizeInfo));
-        Optional.ofNullable(product.getProductCount())
-                .ifPresent(productCount -> findProduct.setProductCount(productCount));
-
+        BeanUtils.copyProperties(product, findProduct);
 
         return productRepository.save(findProduct);
     }
+
     //상태변경
     public Product updateStatus(long id){
         log.info("---Updating Status---", id);
 
         Product findProduct = findVerifiedProduct(id);
 
-        if(findProduct.getProductCount() >= 5 && findProduct.getProductCount() >= 1){
-            findProduct.setProductStatus(Product.ProductStatus.INSTOCK);
-        }if(findProduct.getProductCount() == 0)
-        findProduct.setProductStatus(Product.ProductStatus.SOLDOUT);
+        changeProductStatus(findProduct);
 
         return productRepository.save(findProduct);
 
@@ -84,7 +64,7 @@ public class ProductService {
             return product;
         }else {
             log.warn("---Product Not Found---",id);
-            throw new RuntimeException("Product Not Found");
+            throw new BusinessLogicException(ExceptionCode.PRODUCT_NOT_FOUND);
         }
 
     }
@@ -129,12 +109,18 @@ public class ProductService {
                 productRepository.findById(id);
         Product findProduct =
                 optionalProduct.orElseThrow(() ->
-                        new RuntimeException("Product Not Found"));
+                        new BusinessLogicException(ExceptionCode.PRODUCT_NOT_FOUND));
         return findProduct;
 
     }
 
+    private void changeProductStatus(Product product){
 
+        if(product.getProductCount() <= 5 && product.getProductCount() >= 1){
+            product.setProductStatus(Product.ProductStatus.INSTOCK);
+        }if(product.getProductCount() == 0)
+            product.setProductStatus(Product.ProductStatus.SOLDOUT);
+    }
 
 
 }

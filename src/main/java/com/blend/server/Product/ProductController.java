@@ -1,5 +1,7 @@
 package com.blend.server.Product;
 
+import com.blend.server.Product.global.dto.MultiResponseDto;
+import com.blend.server.Product.utils.UriCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -30,7 +32,7 @@ public class ProductController {
 
     //상품 등록
     @PostMapping
-    public ResponseEntity postProduct(@RequestBody ProductPostDto productPostDto){
+    public ResponseEntity postProduct(@RequestBody ProductPostDto productPostDto) {
         logger.info("-------Creating Product-------");
 
 
@@ -46,16 +48,17 @@ public class ProductController {
     //상품 수정
     @PatchMapping("/{id}")
     public ResponseEntity updateProduct(@PathVariable("id") long id,
-                                        @RequestBody ProductPatchDto productPatchDto){
-        logger.info("------- Updating Product -------",id);
+                                        @RequestBody ProductPatchDto productPatchDto) {
+        logger.info("------- Updating Product -------", id);
 
         productPatchDto.setId(id);
-        Product product = productService.updateProduct(mapper.productPatchDtoToProduct(productPatchDto));
+        Product product = productService.updateProduct(id, mapper.productPatchDtoToProduct(productPatchDto));
 
-        logger.info("------- Updated Product -------",id);
+        logger.info("------- Updated Product -------", id);
 
         return new ResponseEntity<>(mapper.productToProductDetailResponseDto(product), HttpStatus.OK);
     }
+
 
     //상품 상세조회(id 조회)
     @GetMapping("/{id}")
@@ -143,7 +146,7 @@ public class ProductController {
         Product product = productService.updateStatus(id);
 
         logger.info("----- Updated Status -----",id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(product,HttpStatus.OK);
 
     }
 
