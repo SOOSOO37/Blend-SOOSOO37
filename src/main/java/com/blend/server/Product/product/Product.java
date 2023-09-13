@@ -1,53 +1,65 @@
-package com.blend.server.Product;
+package com.blend.server.Product.product;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import com.blend.server.Product.category.Category;
+import com.blend.server.Product.global.audit.Auditable;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 @Setter
+@Getter
 @Entity
-public class Product {
+public class Product extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false)
     private String brand;
 
+    @Column(nullable = false)
     private String productName;
 
-    private String category;
+    //@Column(nullable = false)
+    //private String category;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JsonManagedReference
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     private int ranking;
 
+    @Column(nullable = false)
     private int viewCount;
 
+    @Column(nullable = false)
     private int reviewCount;
 
+    @Column(nullable = false)
     private int likeCount;
 
+    @Column(nullable = false)
     private int productCount;
 
+    @Column(nullable = false)
     private int price;
 
+    @Column(nullable = false)
     private int salePrice;
 
+    @Column(nullable = false)
     private String image;
 
+    @Column(nullable = false)
     private String info;
 
+    @Column(nullable = false)
     private String sizeInfo;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime modifiedAt;
 
     @Enumerated(value = EnumType.STRING)
     private ProductStatus productStatus = ProductStatus.SALE;

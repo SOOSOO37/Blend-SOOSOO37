@@ -1,7 +1,10 @@
-package com.blend.server.Product;
+package com.blend.server.Product.product;
 
+import com.blend.server.Product.category.Category;
+import com.blend.server.Product.product.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -16,7 +19,7 @@ public class ProductPostDto {
 
     private String productName;
 
-    private String category;
+    private long categoryId;
 
     private int price;
 
@@ -36,7 +39,7 @@ public class ProductPostDto {
 
     private String sizeInfo;
 
-    private LocalDateTime createdAt;
+
 
 
 }
