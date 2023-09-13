@@ -26,7 +26,7 @@ public class Category {
 
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.MERGE, fetch = FetchType.LAZY) // EAGER 설정
+    @OneToMany(mappedBy = "category", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonBackReference
     private List<Product> productList = new ArrayList<>();
 

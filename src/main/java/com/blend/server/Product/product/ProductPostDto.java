@@ -19,7 +19,7 @@ public class ProductPostDto {
 
     private String productName;
 
-    private long categoryId;
+    //private long categoryId;
 
     private int price;
 

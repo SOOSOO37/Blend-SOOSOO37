@@ -55,7 +55,7 @@ public class ProductController {
                                         @RequestBody ProductPatchDto productPatchDto) {
         logger.info("------- Updating Product -------", id);
         productPatchDto.setId(id);
-        Product updateProduct = productService.updateProduct(id,mapper.productPatchDtoToProduct(productPatchDto));
+        Product updateProduct = productService.updateProduct(id,mapper.productPatchDtoToProduct(productPatchDto), productPatchDto.getCategoryId());
 
         logger.info("------- Updated Product -------", id);
 
@@ -95,12 +95,11 @@ public class ProductController {
     @GetMapping("/category")
     public ResponseEntity findCategoryContent(@RequestParam(defaultValue = "1") int page,
                                              @RequestParam(defaultValue = "10") int size,
-                                             @RequestParam(required = false, defaultValue = "") String name){
+                                             @RequestParam String name){
 
         logger.info("----- Inquiring Category -----");
-
         Category category = categoryService.findCategory(name);
-        Page<Product> productPage = productService.findCategory(page -1, size, category);
+        Page<Product> productPage = productService.findCategory(page -1, size, name);
         List<Product> productList = productPage.getContent();
 
         logger.info("----- Category -----");

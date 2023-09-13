@@ -1,5 +1,7 @@
 package com.blend.server.Product.category;
 
+import com.blend.server.Product.global.exception.BusinessLogicException;
+import com.blend.server.Product.global.exception.ExceptionCode;
 import com.blend.server.Product.product.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

@@ -39,7 +39,7 @@ public class CategoryController {
 
     @GetMapping("/all")
     public ResponseEntity findAllCategories(@RequestParam int page,
-                                      @RequestParam int size){
+                                            @RequestParam int size){
 
 
         Page<Category> categories = categoryService.findAllCategory(page -1, size);

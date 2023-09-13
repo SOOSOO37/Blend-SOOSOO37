@@ -40,12 +40,17 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product updateProduct(long id,Product product) {
+    public Product updateProduct(long id,Product product,long categoryId) {
         log.info("---Updating Product---");
 
         Product findProduct = findVerifiedProduct(id);
 
-        BeanUtils.copyProperties(product, findProduct);
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
+
+        product.setCategory(category);
+
+        BeanUtils.copyProperties(product, findProduct,"productStatus");
 
         return productRepository.save(findProduct);
     }
@@ -84,10 +89,13 @@ public class ProductService {
 
     }
 
-    public Page<Product> findCategory(int page, int size, Category category){
+    public Page<Product> findCategory(int page, int size, String name){
         log.info("---Inquiring Category---");
 
+        Category category = categoryRepository.findByName(name);
+
         return productRepository.findByCategory(category, PageRequest.of(page, size, Sort.by("id").descending()));
+
     }
 
     public Page<Product> findSaleProduct (int page, int size){
