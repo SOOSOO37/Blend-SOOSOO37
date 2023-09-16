@@ -6,6 +6,7 @@ import com.blend.server.Product.global.exception.BusinessLogicException;
 import com.blend.server.Product.global.exception.ExceptionCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -127,7 +128,7 @@ public class ProductService {
 
     }
 
-    private void changeProductStatus(Product product){
+    public void changeProductStatus(Product product){
 
         if(product.getProductCount() <= 5 && product.getProductCount() >= 1){
             product.setProductStatus(Product.ProductStatus.INSTOCK);
