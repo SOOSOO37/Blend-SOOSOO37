@@ -1,19 +1,17 @@
 package com.blend.server.test;
 
-import com.blend.server.Product.category.Category;
-import com.blend.server.Product.category.CategoryRepository;
-import com.blend.server.Product.global.exception.BusinessLogicException;
-import com.blend.server.Product.global.exception.ExceptionCode;
-import com.blend.server.Product.product.Product;
-import com.blend.server.Product.product.ProductRepository;
-import com.blend.server.Product.product.ProductService;
+import com.blend.server.category.Category;
+import com.blend.server.category.CategoryRepository;
+import com.blend.server.global.exception.BusinessLogicException;
+import com.blend.server.Product.Product;
+import com.blend.server.Product.ProductRepository;
+import com.blend.server.Product.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.*;
 
 import java.util.ArrayList;
