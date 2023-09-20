@@ -1,7 +1,10 @@
-package com.blend.server.Product;
+package com.blend.server.Product.product;
 
+import com.blend.server.Product.category.Category;
+import com.blend.server.Product.product.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -9,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ProductPatchDto {
 
     private long id;
@@ -17,7 +21,7 @@ public class ProductPatchDto {
 
     private String productName;
 
-    private String category;
+    private long categoryId;
 
     private int price;
 
@@ -36,10 +40,6 @@ public class ProductPatchDto {
     private String info;
 
     private String sizeInfo;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime modifiedAt;
 
 
 }

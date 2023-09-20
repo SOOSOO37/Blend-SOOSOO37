@@ -1,5 +1,9 @@
-package com.blend.server.Product;
+package com.blend.server.Product.product;
 
+import com.blend.server.Product.category.Category;
+import com.blend.server.Product.category.CategoryService;
+import com.blend.server.Product.global.dto.MultiResponseDto;
+import com.blend.server.Product.utils.UriCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,20 +25,23 @@ public class ProductController {
 
     private final ProductService productService;
 
+    private final CategoryService categoryService;
+
     private final ProductMapper mapper;
 
-    public ProductController(ProductService productService, ProductMapper mapper) {
+    public ProductController(ProductService productService, CategoryService categoryService, ProductMapper mapper) {
         this.productService = productService;
+        this.categoryService = categoryService;
         this.mapper = mapper;
     }
 
-    //상품 등록
     @PostMapping
-    public ResponseEntity postProduct(@RequestBody ProductPostDto productPostDto){
+    public ResponseEntity postProduct(@RequestBody ProductPostDto productPostDto,
+                                      @RequestParam Long categoryId) {
         logger.info("-------Creating Product-------");
 
 
-        Product product = productService.createProduct(mapper.productPostDtoToProduct(productPostDto));
+        Product product = productService.createProduct(mapper.productPostDtoToProduct(productPostDto), categoryId);
 
         URI location = UriCreator.createUri(PRODUCT_DEFAULT_URL, product.getId());
 
@@ -43,23 +50,20 @@ public class ProductController {
         return ResponseEntity.created(location).build();
     }
 
-    //상품 수정
     @PatchMapping("/{id}")
     public ResponseEntity updateProduct(@PathVariable("id") long id,
-                                        @RequestBody ProductPatchDto productPatchDto){
-        logger.info("------- Updating Product -------",id);
-
+                                        @RequestBody ProductPatchDto productPatchDto) {
+        logger.info("------- Updating Product -------", id);
         productPatchDto.setId(id);
-        Product product = productService.updateProduct(mapper.productPatchDtoToProduct(productPatchDto));
+        Product updateProduct = productService.updateProduct(id,mapper.productPatchDtoToProduct(productPatchDto), productPatchDto.getCategoryId());
 
-        logger.info("------- Updated Product -------",id);
+        logger.info("------- Updated Product -------", id);
 
-        return new ResponseEntity<>(mapper.productToProductDetailResponseDto(product), HttpStatus.OK);
+        return new ResponseEntity<>(mapper.productToProductDetailResponseDto(updateProduct), HttpStatus.OK);
     }
 
-    //상품 상세조회(id 조회)
     @GetMapping("/{id}")
-    public ResponseEntity getProduct(@PathVariable("id") long id){
+    public ResponseEntity findProduct(@PathVariable("id") long id){
         logger.info("----- Inquiring Product -----",id);
 
         Product product = productService.findProduct(id);
@@ -74,9 +78,8 @@ public class ProductController {
         return new ResponseEntity<>(mapper.productToProductDetailResponseDto(product),HttpStatus.OK);
     }
 
-    //실시간랭킹 조회(view수)
     @GetMapping("/ranking")
-    public ResponseEntity getRanking(@RequestParam int page,
+    public ResponseEntity findRanking(@RequestParam int page,
                                      @RequestParam int size){
 
         logger.info("----- Inquiring Ranking -----");
@@ -89,15 +92,14 @@ public class ProductController {
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.productsToProductResponseDtos(productList),products),HttpStatus.OK);
     }
 
-    //카테고리별 상품 조회
     @GetMapping("/category")
-    public ResponseEntity getCategoryContent(@RequestParam(defaultValue = "1") int page,
+    public ResponseEntity findCategoryContent(@RequestParam(defaultValue = "1") int page,
                                              @RequestParam(defaultValue = "10") int size,
-                                             @RequestParam(required = false, defaultValue = "") String category){
+                                             @RequestParam String name){
 
         logger.info("----- Inquiring Category -----");
-
-        Page<Product> productPage = productService.findCategory(page -1, size, category);
+        Category category = categoryService.findCategory(name);
+        Page<Product> productPage = productService.findCategory(page -1, size, name);
         List<Product> productList = productPage.getContent();
 
         logger.info("----- Category -----");
@@ -106,7 +108,6 @@ public class ProductController {
 
     }
 
-    //상품 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity deleteProduct(@PathVariable("id")long id){
         logger.info("----- deleting Product -----",id);
@@ -119,9 +120,8 @@ public class ProductController {
 
     }
 
-    //판매중인 상품 조회
     @GetMapping("/all")
-    public ResponseEntity getAllProducts(@RequestParam(defaultValue = "1") int page,
+    public ResponseEntity findAllProducts(@RequestParam(defaultValue = "1") int page,
                                          @RequestParam(defaultValue = "10") int size){
 
         logger.info("----- Search for Products on sale -----");
@@ -135,7 +135,6 @@ public class ProductController {
 
     }
 
-    //상태 업데이트(판매중/품절/재고5개 미만)
     @PatchMapping("/{id}/status")
     public ResponseEntity updateStatus(@PathVariable("id")long id){
         logger.info("----- Updating Status -----",id);
@@ -143,7 +142,7 @@ public class ProductController {
         Product product = productService.updateStatus(id);
 
         logger.info("----- Updated Status -----",id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(product,HttpStatus.OK);
 
     }
 
