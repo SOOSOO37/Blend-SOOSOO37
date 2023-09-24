@@ -8,13 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ProductPostDto {
+public class ProductCreateDto {
 
     private String brand;
 
     private String productName;
-
-    //private long categoryId;
 
     private int price;
 

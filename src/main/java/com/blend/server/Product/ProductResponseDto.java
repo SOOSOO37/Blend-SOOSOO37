@@ -1,15 +1,11 @@
 package com.blend.server.Product;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponseDto {
 
@@ -37,6 +33,22 @@ public class ProductResponseDto {
 
     private LocalDateTime modifiedAt;
 
-
-
+    @Builder
+    public ProductResponseDto(long id, String brand, String productName, long categoryId,
+                              String name, int ranking, int price, int salePrice,
+                              Product.ProductStatus productStatus, String image,
+                              LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        this.id = id;
+        this.brand = brand;
+        this.productName = productName;
+        this.categoryId = categoryId;
+        this.name = name;
+        this.ranking = ranking;
+        this.price = price;
+        this.salePrice = salePrice;
+        this.productStatus = productStatus;
+        this.image = image;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+    }
 }

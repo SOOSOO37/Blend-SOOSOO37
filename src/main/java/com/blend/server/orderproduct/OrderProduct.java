@@ -5,17 +5,13 @@ import com.blend.server.global.audit.Auditable;
 import com.blend.server.order.Order;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class OrderProduct extends Auditable {
@@ -67,11 +63,4 @@ public class OrderProduct extends Auditable {
 
         }
     }
-
-
-
-
-
-
-
 }

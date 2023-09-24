@@ -3,19 +3,16 @@ package com.blend.server.order;
 import com.blend.server.global.audit.Auditable;
 import com.blend.server.orderproduct.OrderProduct;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 @Entity(name = "ORDERS")
 public class Order extends Auditable {
 
@@ -42,7 +39,7 @@ public class Order extends Auditable {
     private OrderStatus orderStatus = OrderStatus.ORDER_DONE;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderProduct> orderProductList = new ArrayList<>();
 
     public enum OrderStatus {
@@ -58,10 +55,9 @@ public class Order extends Auditable {
         @Getter
         private String description;
 
-        OrderStatus(int number, String description){
+        OrderStatus(int number, String description) {
             this.number = number;
             this.description = description;
         }
     }
-
 }

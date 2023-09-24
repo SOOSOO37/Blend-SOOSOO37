@@ -1,5 +1,6 @@
 package com.blend.server.order;
 
+import com.blend.server.global.audit.Auditable;
 import com.blend.server.orderproduct.OrderProductDetailResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
-public class OrderDetailResponseDto {
+public class OrderDetailResponseDto extends Auditable {
 
     private long id;
 
@@ -26,10 +26,6 @@ public class OrderDetailResponseDto {
     private int totalPrice;
 
     private Order.OrderStatus orderStatus;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime modifiedAt;
 
     private List<OrderProductDetailResponseDto> orderProductList;
 }

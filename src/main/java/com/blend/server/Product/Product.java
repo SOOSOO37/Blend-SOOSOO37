@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Setter
 @Getter
 @Entity
@@ -88,8 +87,6 @@ public class Product extends Auditable {
             this.statusNumber = statusNumber;
             this.statusDescription = statusDescription;
         }
-
-
     }
 
 }

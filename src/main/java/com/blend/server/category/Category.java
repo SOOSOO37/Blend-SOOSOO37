@@ -3,10 +3,7 @@ package com.blend.server.category;
 
 import com.blend.server.Product.Product;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,7 +11,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class Category {
@@ -28,7 +24,5 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonBackReference
     private List<Product> productList = new ArrayList<>();
-
-
 
 }

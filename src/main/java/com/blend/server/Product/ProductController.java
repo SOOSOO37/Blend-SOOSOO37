@@ -5,6 +5,7 @@ import com.blend.server.category.CategoryService;
 import com.blend.server.global.dto.MultiResponseDto;
 import com.blend.server.utils.UriCreator;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import java.util.List;
 
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/products")
 public class ProductController {
 
@@ -30,19 +32,14 @@ public class ProductController {
 
     private final ProductMapper mapper;
 
-    public ProductController(ProductService productService, CategoryService categoryService, ProductMapper mapper) {
-        this.productService = productService;
-        this.categoryService = categoryService;
-        this.mapper = mapper;
-    }
     @ApiOperation(value = "상품 등록 API")
     @PostMapping
-    public ResponseEntity postProduct(@RequestBody ProductPostDto productPostDto,
+    public ResponseEntity postProduct(@RequestBody ProductCreateDto productCreateDto,
                                       @RequestParam Long categoryId) {
         logger.info("-------Creating Product-------");
 
 
-        Product product = productService.createProduct(mapper.productPostDtoToProduct(productPostDto), categoryId);
+        Product product = productService.createProduct(mapper.productPostDtoToProduct(productCreateDto), categoryId);
 
         URI location = UriCreator.createUri(PRODUCT_DEFAULT_URL, product.getId());
 
@@ -54,10 +51,10 @@ public class ProductController {
     @ApiOperation(value = "상품 수정 API")
     @PatchMapping("/{id}")
     public ResponseEntity updateProduct(@PathVariable("id") long id,
-                                        @RequestBody ProductPatchDto productPatchDto) {
+                                        @RequestBody ProductUpdateDto productUpdateDto) {
         logger.info("------- Updating Product -------", id);
-        productPatchDto.setId(id);
-        Product updateProduct = productService.updateProduct(id,mapper.productPatchDtoToProduct(productPatchDto), productPatchDto.getCategoryId());
+        productUpdateDto.setId(id);
+        Product updateProduct = productService.updateProduct(id,mapper.productPatchDtoToProduct(productUpdateDto), productUpdateDto.getCategoryId());
 
         logger.info("------- Updated Product -------", id);
 
@@ -127,7 +124,7 @@ public class ProductController {
     }
 
     @ApiOperation(value = "전체 상품 조회 API")
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity findAllProducts(@RequestParam(defaultValue = "1") int page,
                                          @RequestParam(defaultValue = "10") int size){
 

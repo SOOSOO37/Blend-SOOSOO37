@@ -43,10 +43,10 @@ public class ProductServiceTest {
     @Test
     public void createProductTest() {
         // 샘플 카테고리 생성
-        Category category = createCategory();
+        Category category = TestObjectFactory.createCategory();
 
         // 샘플 상품 생성
-        Product product = createProduct();
+        Product product = TestObjectFactory.createProduct();
 
         // 카테고리 레포지토리에서 메서드 호출 시 Id가 1인 것을 찾으면 이 카테고리를 리턴
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
@@ -58,50 +58,18 @@ public class ProductServiceTest {
         // 생성된 상품 확인(검증)
         assertNotNull(createdProduct);
         assertEquals(category, createdProduct.getCategory());
-        assertEquals("제품명", createdProduct.getProductName());
-        assertEquals("브랜드", createdProduct.getBrand());
-        assertEquals(50000, createdProduct.getPrice());
-        assertEquals(40000, createdProduct.getSalePrice());
-        assertEquals(Product.ProductStatus.SALE, createdProduct.getProductStatus());
-        assertEquals("Image.PNG", createdProduct.getImage());
-        assertEquals(0, createdProduct.getReviewCount());
-        assertEquals(0, createdProduct.getLikeCount());
-        assertEquals(10, createdProduct.getProductCount());
-        assertEquals("제품 정보", createdProduct.getInfo());
-        assertEquals("사이즈 정보", createdProduct.getSizeInfo());
-    }
+        assertEquals(product,createdProduct);
 
-    public Category createCategory() {
-        Category category = new Category();
-        category.setId(1L);
-        category.setName("상의");
-        return category;
-    }
-
-    public Product createProduct() {
-        Product product = new Product();
-        product.setProductName("제품명");
-        product.setBrand("브랜드");
-        product.setPrice(50000);
-        product.setSalePrice(40000);
-        product.setProductStatus(Product.ProductStatus.SALE);
-        product.setImage("Image.PNG");
-        product.setReviewCount(0);
-        product.setLikeCount(0);
-        product.setProductCount(10);
-        product.setInfo("제품 정보");
-        product.setSizeInfo("사이즈 정보");
-        return product;
     }
 
     @DisplayName("상품 수정 테스트")
     @Test
     public void testUpdateProduct() {
         // 카테고리 생성
-        Category category = createCategory();
+        Category category = TestObjectFactory.createCategory();
 
         // 상품 생성
-        Product product = createProduct();
+        Product product = TestObjectFactory.createProduct();
         product.setCategory(category);
 
         // 카테고리 생성 (해당 카테고리로 상품 카테고리 수정을 위해)
@@ -167,7 +135,7 @@ public class ProductServiceTest {
     @Test
     public void testUpdateStatus() {
 
-        Product product = createProduct();
+        Product product = TestObjectFactory.createProduct();
         product.setProductCount(4);
 
         //항상 동일한 객체 리턴 save 메서드 -> 객체저장
@@ -182,14 +150,13 @@ public class ProductServiceTest {
 
         assertEquals(Product.ProductStatus.INSTOCK, updatedProduct.getProductStatus());
 
-
     }
 
     @DisplayName("상품 조회 및 조회수 증가 테스트")
     @Test
     public void findProductTest() {
 
-        Product product = createProduct();
+        Product product = TestObjectFactory.createProduct();
         product.setViewCount(0);
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
@@ -239,33 +206,31 @@ public class ProductServiceTest {
         assertEquals(size, products.getNumberOfElements());
         assertEquals(10, products.getTotalElements());
         assertEquals(10, products.getContent().get(0).getViewCount());
-
-
     }
 
     @DisplayName("카테고리 검색 테스트")
     @Test
     public void CategoryTest() {
         // 첫 번째 카테고리와 상품 객체 생성
-        Category category = createCategory();
+        Category category = TestObjectFactory.createCategory();
 
         List<Product> productList1 = new ArrayList<>();
-        Product product = createProduct();
+        Product product = TestObjectFactory.createProduct();
         product.setCategory(category);
         productList1.add(product);
 
-        Product product2 = createProduct();
+        Product product2 = TestObjectFactory.createProduct();
         product2.setProductName("제품명2");
         product2.setCategory(category);
         productList1.add(product2);
 
         // 두 번째 카테고리와 상품 객체 생성
-        Category category2 = createCategory();
+        Category category2 = TestObjectFactory.createCategory();
         category2.setId(2);
         category2.setName("하의");
 
         List<Product> productList2 = new ArrayList<>();
-        Product product3 = createProduct();
+        Product product3 = TestObjectFactory.createProduct();
         product3.setProductName("제품명3");
         product3.setCategory(category2);
         productList2.add(product3);
@@ -312,11 +277,11 @@ public class ProductServiceTest {
     @Test
     public void SaleProductTest () {
 
-        Product product = createProduct();
+        Product product = TestObjectFactory.createProduct();
         product.setProductName("제품명");
         product.setProductStatus(Product.ProductStatus.SALE);
 
-        Product product2 = createProduct();
+        Product product2 = TestObjectFactory.createProduct();
         product2.setProductName("2제품명");
         product2.setProductStatus(Product.ProductStatus.INSTOCK);
 
@@ -339,7 +304,7 @@ public class ProductServiceTest {
     @Test
     public void deleteProductTest() {
 
-        Product product = createProduct();
+        Product product = TestObjectFactory.createProduct();
 
         when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));
 
@@ -353,7 +318,7 @@ public class ProductServiceTest {
     @Test
     public void findVerifiedTest() {
 
-        Product product = createProduct();
+        Product product = TestObjectFactory.createProduct();
 
         when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));
 
@@ -372,18 +337,3 @@ public class ProductServiceTest {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

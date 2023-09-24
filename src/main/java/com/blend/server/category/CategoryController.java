@@ -3,6 +3,7 @@ package com.blend.server.category;
 import com.blend.server.utils.UriCreator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
-@RestController
 @Api(tags = "Category API Controller")
+@RestController
+@RequiredArgsConstructor
 @RequestMapping("/categories")
 public class CategoryController {
 
@@ -22,16 +24,11 @@ public class CategoryController {
 
     private final static String CATEGORY_DEFAULT_URL = "/categories";
 
-    public CategoryController(CategoryService categoryService, CategoryMapper mapper) {
-        this.categoryService = categoryService;
-        this.mapper = mapper;
-    }
-
     @PostMapping
     @ApiOperation(value = "카테고리 생성 API")
-    public ResponseEntity createCategory(@RequestBody CategoryPostDto categoryPostDto){
+    public ResponseEntity createCategory(@RequestBody CategoryCreateDto categoryCreateDto){
 
-        Category category = categoryService.createCategory(mapper.categoryPostDtoToCategory(categoryPostDto));
+        Category category = categoryService.createCategory(mapper.categoryPostDtoToCategory(categoryCreateDto));
 
         URI location = UriCreator.createUri(CATEGORY_DEFAULT_URL,category.getId());
 
