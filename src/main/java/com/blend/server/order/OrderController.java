@@ -1,7 +1,7 @@
 package com.blend.server.order;
 
 import com.blend.server.global.dto.MultiResponseDto;
-import com.blend.server.utils.UriCreator;
+import com.blend.server.global.utils.UriCreator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

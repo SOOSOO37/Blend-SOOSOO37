@@ -3,7 +3,7 @@ package com.blend.server.Product;
 import com.blend.server.category.Category;
 import com.blend.server.category.CategoryService;
 import com.blend.server.global.dto.MultiResponseDto;
-import com.blend.server.utils.UriCreator;
+import com.blend.server.global.utils.UriCreator;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

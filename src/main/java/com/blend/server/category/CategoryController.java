@@ -1,6 +1,6 @@
 package com.blend.server.category;
 
-import com.blend.server.utils.UriCreator;
+import com.blend.server.global.utils.UriCreator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
