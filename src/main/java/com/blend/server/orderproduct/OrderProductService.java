@@ -2,7 +2,6 @@ package com.blend.server.orderproduct;
 
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
-import com.blend.server.order.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

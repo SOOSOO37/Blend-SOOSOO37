@@ -2,7 +2,6 @@ package com.blend.server.cart;
 
 import com.blend.server.Product.Product;
 import com.blend.server.Product.ProductService;
-import com.blend.server.category.Category;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -45,11 +43,10 @@ public class CartService {
         return cartProductRepository.save(cartProduct);
     }
 
-    //유효한 장바구니와 상품인지 검증
     private CartProduct findVerifiedCartProduct(Long cartId, Long productId) {
         CartProduct cartProduct = cartProductRepository.findByProductIdAndCartId(productId,cartId)
                 .orElseThrow(()->{
-                    throw new RuntimeException("cartProduct 에러");
+                    throw new BusinessLogicException(ExceptionCode.CARTPRODUCT_NOT_FOUND);
                 });
         return cartProduct;
     }
@@ -57,7 +54,7 @@ public class CartService {
     private void verifiedCartProduct(Long cartId, Long productId){
         Optional<CartProduct> optionalCartProduct = cartProductRepository.findByProductIdAndCartId(productId, cartId);
         optionalCartProduct.ifPresent(cartProduct -> {
-            throw new RuntimeException("이미 들어간 상품입니다.");
+            throw new BusinessLogicException(ExceptionCode.CARTPRODUCT_EXISTS);
         });
     }
 
@@ -71,14 +68,6 @@ public class CartService {
         return findCart;
 
     }
-
-//    // 회원별로 조회로 변경 예정
-//    public Page<CartProduct> findCartProducts(int page, int size, long cartId) {
-//
-//        Cart cart = findVerifiedCart(cartId);
-//
-//        return cartProductRepository.findByCartId(PageRequest.of(page, size, Sort.by("createdAt").descending()), cart);
-//    }
 
     public Page<CartProduct> findCartProducts(int page, int size, long cartId) {
         // cartId를 사용하여 Cart 객체를 검색

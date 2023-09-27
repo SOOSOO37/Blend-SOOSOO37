@@ -4,6 +4,8 @@ import com.blend.server.category.Category;
 import com.blend.server.category.CategoryRepository;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
+import com.blend.server.productImage.ProductImage;
+import com.blend.server.productImage.ProductImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -13,8 +15,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional
@@ -26,17 +33,38 @@ public class ProductService {
 
     private final CategoryRepository categoryRepository;
 
-    public Product createProduct(Product product, long categoryId) {
+    private final ProductImageRepository productImageRepository;
+
+//    public Product createProduct(Product product, long categoryId) {
+//        log.info("---Creating Product---");
+//
+//        Category category = categoryRepository.findById(categoryId)
+//                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
+//
+//        product.setCategory(category);
+//
+//        log.info("Product created: {}", product);
+//
+//        return productRepository.save(product);
+//    }
+    public Product createProduct(Product product, long categoryId, List<ProductImage> productImages) {
         log.info("---Creating Product---");
 
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
 
         product.setCategory(category);
-
-        log.info("Product created: {}", product);
-
+        // 이미지 추가
+        if(productImages != null){
+            List<ProductImage> productImageList = productImages.stream()
+                    .map(image -> {
+                        product.addProductImage(image);
+                        return image;
+                    })
+                    .collect(Collectors.toList());
+        }
         return productRepository.save(product);
+
     }
 
     public Product updateProduct(long id,Product product,long categoryId) {

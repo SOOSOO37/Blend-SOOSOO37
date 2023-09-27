@@ -2,12 +2,17 @@ package com.blend.server.Product;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ProductCreateDto {
 
     private String brand;
@@ -20,8 +25,6 @@ public class ProductCreateDto {
 
     private Product.ProductStatus productStatus;
 
-    private String image;
-
     private int reviewCount;
 
     private int likeCount;
@@ -31,8 +34,5 @@ public class ProductCreateDto {
     private String info;
 
     private String sizeInfo;
-
-
-
 
 }

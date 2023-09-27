@@ -3,15 +3,20 @@ package com.blend.server.Product;
 import com.blend.server.category.Category;
 import com.blend.server.category.CategoryService;
 import com.blend.server.global.dto.MultiResponseDto;
+import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.utils.UriCreator;
+import com.blend.server.productImage.ProductImage;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.List;
@@ -22,6 +27,8 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
+    @Value("${config.domain}")
+    private String domain;
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     private final static String PRODUCT_DEFAULT_URL = "/products";
@@ -32,20 +39,43 @@ public class ProductController {
 
     private final ProductMapper mapper;
 
-    @ApiOperation(value = "상품 등록 API")
+//    @ApiOperation(value = "상품 등록 API")
+//    @PostMapping
+//    public ResponseEntity postProduct(@RequestBody ProductCreateDto productCreateDto,
+//                                      @RequestParam Long categoryId) {
+//        logger.info("-------Creating Product-------");
+//
+//        Product product = productService.createProduct(mapper.productPostDtoToProduct(productCreateDto),categoryId);
+//
+//
+//        URI location = UriCreator.createUri(PRODUCT_DEFAULT_URL, product.getId());
+//
+//        logger.info("-------Product ID: {} -------", product.getId());
+//
+//        return ResponseEntity.created(location).build();
+//    }
+
     @PostMapping
-    public ResponseEntity postProduct(@RequestBody ProductCreateDto productCreateDto,
+    public ResponseEntity postProduct(@RequestPart(name = "post") ProductCreateDto productCreateDto,
+                                      @RequestPart(required = false, name = "imageFiles") List<MultipartFile> imageFiles,
                                       @RequestParam Long categoryId) {
         logger.info("-------Creating Product-------");
 
+        try {
+            // ProductCreateDto를 Product 엔티티로 매핑
+            Product product = mapper.productPostDtoToProduct(productCreateDto);
 
-        Product product = productService.createProduct(mapper.productPostDtoToProduct(productCreateDto), categoryId);
+            List<ProductImage> productImageList = mapper.multipartFilesToProductImages(imageFiles);
 
-        URI location = UriCreator.createUri(PRODUCT_DEFAULT_URL, product.getId());
+            Product createProduct = productService.createProduct(product,categoryId,productImageList);
+            URI location = UriCreator.createUri(PRODUCT_DEFAULT_URL, product.getId());
 
-        logger.info("-------Product ID: {} -------", product.getId());
+            logger.info("-------Product ID: {} -------", product.getId());
 
-        return ResponseEntity.created(location).build();
+            return ResponseEntity.created(location).build();
+        } catch (BusinessLogicException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @ApiOperation(value = "상품 수정 API")
@@ -58,7 +88,7 @@ public class ProductController {
 
         logger.info("------- Updated Product -------", id);
 
-        return new ResponseEntity<>(mapper.productToProductDetailResponseDto(updateProduct), HttpStatus.OK);
+        return new ResponseEntity<>(mapper.productToProductDetailResponseDto(updateProduct,domain), HttpStatus.OK);
     }
 
     @ApiOperation(value = "상품 조회 API")
@@ -75,7 +105,7 @@ public class ProductController {
 
         logger.info("----- Found Product -----",id);
 
-        return new ResponseEntity<>(mapper.productToProductDetailResponseDto(product),HttpStatus.OK);
+        return new ResponseEntity<>(mapper.productToProductDetailResponseDto(product,domain),HttpStatus.OK);
     }
 
     @ApiOperation(value = "상품 실시간 랭킹(조회수 순위순) 조회 API")

@@ -27,8 +27,6 @@ public class ProductResponseDto {
 
     private Product.ProductStatus productStatus;
 
-    private String image;
-
     private LocalDateTime createdAt;
 
     private LocalDateTime modifiedAt;
@@ -36,7 +34,7 @@ public class ProductResponseDto {
     @Builder
     public ProductResponseDto(long id, String brand, String productName, long categoryId,
                               String name, int ranking, int price, int salePrice,
-                              Product.ProductStatus productStatus, String image,
+                              Product.ProductStatus productStatus,
                               LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.brand = brand;
@@ -47,7 +45,6 @@ public class ProductResponseDto {
         this.price = price;
         this.salePrice = salePrice;
         this.productStatus = productStatus;
-        this.image = image;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }

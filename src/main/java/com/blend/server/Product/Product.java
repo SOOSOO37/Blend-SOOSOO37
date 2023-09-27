@@ -3,6 +3,8 @@ package com.blend.server.Product;
 import com.blend.server.category.Category;
 import com.blend.server.global.audit.Auditable;
 import com.blend.server.orderproduct.OrderProduct;
+
+import com.blend.server.productImage.ProductImage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
@@ -27,13 +29,13 @@ public class Product extends Auditable {
     @Column(nullable = false)
     private String productName;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JsonManagedReference
     @JoinColumn(name = "category_id")
     private Category category;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product",cascade = CascadeType.REMOVE)
     private List<OrderProduct> orderProductList = new ArrayList<>();
 
     private int ranking;
@@ -57,9 +59,6 @@ public class Product extends Auditable {
     private int salePrice;
 
     @Column(nullable = false)
-    private String image;
-
-    @Column(nullable = false)
     private String info;
 
     @Column(nullable = false)
@@ -68,6 +67,8 @@ public class Product extends Auditable {
     @Enumerated(value = EnumType.STRING)
     private ProductStatus productStatus = ProductStatus.SALE;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductImage> productImages = new ArrayList<>();
 
     public enum ProductStatus{
 
@@ -86,6 +87,12 @@ public class Product extends Auditable {
         ProductStatus(int statusNumber, String statusDescription) {
             this.statusNumber = statusNumber;
             this.statusDescription = statusDescription;
+        }
+    }
+    public void addProductImage(ProductImage productImage){
+        this.productImages.add(productImage);
+        if(productImage.getProduct() != this){
+            productImage.addProduct(this);
         }
     }
 

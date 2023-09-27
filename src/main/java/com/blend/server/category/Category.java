@@ -21,7 +21,7 @@ public class Category {
 
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JsonBackReference
     private List<Product> productList = new ArrayList<>();
 

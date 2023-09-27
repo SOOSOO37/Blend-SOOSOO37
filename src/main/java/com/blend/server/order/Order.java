@@ -39,7 +39,7 @@ public class Order extends Auditable {
     private OrderStatus orderStatus = OrderStatus.ORDER_DONE;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
     private List<OrderProduct> orderProductList = new ArrayList<>();
 
     public enum OrderStatus {

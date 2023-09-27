@@ -57,6 +57,11 @@ dependencies {
 	implementation 'io.springfox:springfox-swagger2:2.9.2'
 	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 
+	// 이미지
+	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4' // 적절한 버전 선택
+
+
+
 
 
 
