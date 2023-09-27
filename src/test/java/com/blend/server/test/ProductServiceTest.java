@@ -6,6 +6,7 @@ import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.Product.Product;
 import com.blend.server.Product.ProductRepository;
 import com.blend.server.Product.ProductService;
+import com.blend.server.productImage.ProductImage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,19 +46,21 @@ public class ProductServiceTest {
 
     @DisplayName("상품 생성 테스트")
     @Test
-    public void createProductTest() {
+    public void createProductTest() throws IOException {
         // 샘플 카테고리 생성
         Category category = TestObjectFactory.createCategory();
 
         // 샘플 상품 생성
         Product product = TestObjectFactory.createProduct();
 
+        List<ProductImage> productImages = new ArrayList<>();
+
         // 카테고리 레포지토리에서 메서드 호출 시 Id가 1인 것을 찾으면 이 카테고리를 리턴
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
         // 객체를 저장하고 저장된 객체 리턴
         when(productRepository.save(product)).thenReturn(product);
         //테스트 서비스메소드 호출
-        Product createdProduct = productService.createProduct(product, 1L);
+        Product createdProduct = productService.createProduct(product, 1L,productImages);
 
         // 생성된 상품 확인(검증)
         assertNotNull(createdProduct);
@@ -87,7 +94,6 @@ public class ProductServiceTest {
         updatedProduct.setPrice(50000);
         updatedProduct.setSalePrice(45000);
         updatedProduct.setProductStatus(Product.ProductStatus.SALE);
-        updatedProduct.setImage("Image2.PNG");
         updatedProduct.setReviewCount(0);
         updatedProduct.setLikeCount(0);
         updatedProduct.setProductCount(15);
@@ -122,7 +128,6 @@ public class ProductServiceTest {
         assertEquals(50000, updated.getPrice());
         assertEquals(45000, updated.getSalePrice());
         assertEquals(Product.ProductStatus.SALE, updated.getProductStatus());
-        assertEquals("Image2.PNG", updated.getImage());
         assertEquals(0, updated.getReviewCount());
         assertEquals(0, updated.getLikeCount());
         assertEquals(15, updated.getProductCount());

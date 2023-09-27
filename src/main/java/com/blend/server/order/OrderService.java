@@ -38,7 +38,7 @@ public class OrderService {
         return savedOrder;
     }
 
-    private int calculateTotalPrice(List<OrderProduct> orderProductList){
+    public int calculateTotalPrice(List<OrderProduct> orderProductList){
         int totalPrice = 0;
         for (OrderProduct orderProduct : orderProductList){
             int price = orderProduct.getProduct().getPrice();
