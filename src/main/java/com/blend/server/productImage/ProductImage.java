@@ -28,11 +28,21 @@ public class ProductImage {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public void addProduct(Product product){
+//    public void addProduct(Product product){
+//        this.product = product;
+//        if(!product.getProductImages().contains(this)){
+//            this.product.addProductImage(this);
+//        }
+//    }
+    public void addProduct(Product product) {
         this.product = product;
-        if(!product.getProductImages().contains(this)){
+        if (shouldAddProductImage()) {
             this.product.addProductImage(this);
         }
     }
+    private boolean shouldAddProductImage() {
+        return !product.getProductImages().contains(this);
+    }
+
 }
 

@@ -1,6 +1,8 @@
 package com.blend.server.Product;
 
 import com.blend.server.category.Category;
+import com.blend.server.global.exception.BusinessLogicException;
+import com.blend.server.global.exception.ExceptionCode;
 import com.blend.server.productImage.ProductImage;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -24,8 +26,8 @@ public interface ProductMapper {
         return product;
     }
 
-       @Mapping(source = "categoryId", target = "category.id")
-      Product productPatchDtoToProduct(ProductUpdateDto productUpdateDto);
+    @Mapping(source = "categoryId", target = "category.id")
+    Product productPatchDtoToProduct(ProductUpdateDto productUpdateDto);
 
     static ProductResponseDto productToProductResponseDto(Product product){
         ProductResponseDto productResponseDto = new ProductResponseDto();
@@ -61,7 +63,7 @@ public interface ProductMapper {
 
     default List<ProductImage> multipartFilesToProductImages(List<MultipartFile> productImages){
         if(productImages == null){
-            return null;
+            throw new BusinessLogicException(ExceptionCode.IMAGE_NOT_FOUND);
         }
         List<ProductImage> productImageList = productImages.stream()
                 .map(multipartFile -> {

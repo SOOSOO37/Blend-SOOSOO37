@@ -45,11 +45,9 @@ public class OrderProductService {
 
     // 주문 상품 상태 변경 설정(한 단계씩 변경 가능)
     private boolean isStatusTransition(OrderProduct.OrderProductStatus currentStatus, OrderProduct.OrderProductStatus newStatus) {
-        // 각 상태 전환을 숫자로 표현하여 비교합니다.
         int currentStatusNum = currentStatus.getNumber();
         int newStatusNum = newStatus.getNumber();
 
-        // 상태 전환 가능 여부를 판단합니다.
         return newStatusNum == currentStatusNum + 1;
     }
 
