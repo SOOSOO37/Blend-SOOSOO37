@@ -2,11 +2,9 @@ package com.blend.server.order;
 
 import com.blend.server.Product.Product;
 import com.blend.server.Product.ProductMapper;
-import com.blend.server.Product.ProductResponseDto;
 import com.blend.server.orderproduct.OrderProduct;
 import com.blend.server.orderproduct.OrderProductDetailResponseDto;
-import com.blend.server.orderproduct.OrderProductDto;
-import org.aspectj.weaver.ast.Or;
+import org.springframework.beans.BeanUtils;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -14,16 +12,11 @@ import java.util.stream.Collectors;
 
 @Mapper (componentModel = "spring")
 public interface OrderMapper {
-    default Order orderPostDtoToOrder (OrderPostDto orderPostDto){
+    default Order orderPostDtoToOrder (OrderCreateDto orderCreateDto){
         Order order = new Order();
-        order.setReceiver(orderPostDto.getReceiver());
-        order.setDeliveryAddress(orderPostDto.getDeliveryAddress());
-        order.setPhoneNumber(orderPostDto.getPhoneNumber());
-        order.setPayMethod(orderPostDto.getPayMethod());
-        order.setTotalPrice(orderPostDto.getTotalPrice());
-        order.setTotalPrice(orderPostDto.getTotalPrice());
+        BeanUtils.copyProperties(orderCreateDto, order);
 
-        List<OrderProduct> orderProducts = orderPostDto.getOrderProductList().stream()
+        List<OrderProduct> orderProducts = orderCreateDto.getOrderProductList().stream()
                 .map(orderProductDto -> {
                     OrderProduct orderProduct = new OrderProduct();
                     Product product = new Product();
@@ -37,8 +30,7 @@ public interface OrderMapper {
         order.setOrderProductList(orderProducts);
         return order;
     }
-
-    Order orderPatchDtoToOrder(OrderPatchDto orderPatchDto);
+    Order orderPatchDtoToOrder(OrderUpdateDto orderUpdateDto);
 
     OrderResponseDto orderToOrderResponseDto (Order order);
 
@@ -46,27 +38,18 @@ public interface OrderMapper {
 
         OrderDetailResponseDto orderDetailResponseDto = new OrderDetailResponseDto();
 
-        orderDetailResponseDto.setId(order.getId());
-        orderDetailResponseDto.setReceiver(order.getReceiver());
-        orderDetailResponseDto.setPhoneNumber(order.getPhoneNumber());
-        orderDetailResponseDto.setDeliveryAddress(order.getDeliveryAddress());
-        orderDetailResponseDto.setOrderStatus(order.getOrderStatus());
-        orderDetailResponseDto.setTotalPrice(order.getTotalPrice());
-        orderDetailResponseDto.setPayMethod(order.getPayMethod());
-        orderDetailResponseDto.setCreatedAt(order.getCreatedAt());
-        orderDetailResponseDto.setModifiedAt(order.getModifiedAt());
+        BeanUtils.copyProperties(order,orderDetailResponseDto);
 
-        ProductResponseDto productResponseDto = new ProductResponseDto();
-        List<OrderProductDetailResponseDto> orderProductDetailResponse = order.getOrderProductList().stream()
+        List<OrderProductDetailResponseDto> orderProductDtos = order.getOrderProductList().stream()
                 .map(orderProduct -> {
                     OrderProductDetailResponseDto orderProductDetailResponseDto = new OrderProductDetailResponseDto();
-                    orderProductDetailResponseDto.setQuantity(orderProduct.getQuantity());
-                    orderProductDetailResponseDto.setParcelNumber(orderProduct.getTrackingNumber());
-                    orderProductDetailResponseDto.setOrderProductStatus(orderProduct.getOrderProductStatus());
+                    BeanUtils.copyProperties(orderProduct, orderProductDetailResponseDto);
                     orderProductDetailResponseDto.setProductResponse(ProductMapper.productToProductResponseDto(orderProduct.getProduct()));
                     return orderProductDetailResponseDto;
-                }).collect(Collectors.toList());
-        orderDetailResponseDto.setOrderProductList(orderProductDetailResponse);
+                })
+                .collect(Collectors.toList());
+
+        orderDetailResponseDto.setOrderProductList(orderProductDtos);
 
         return orderDetailResponseDto;
     }

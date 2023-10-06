@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class OrderProductSellerResponseDto {
 
     private long orderProductId;

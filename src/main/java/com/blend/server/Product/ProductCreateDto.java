@@ -4,20 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductPatchDto {
-
-    private long id;
+public class ProductCreateDto {
 
     private String brand;
 
     private String productName;
-
-    private long categoryId;
 
     private int price;
 
@@ -25,17 +25,14 @@ public class ProductPatchDto {
 
     private Product.ProductStatus productStatus;
 
-    private int ranking;
+    private int reviewCount;
 
     private int likeCount;
 
     private int productCount;
 
-    private String image;
-
     private String info;
 
     private String sizeInfo;
-
 
 }

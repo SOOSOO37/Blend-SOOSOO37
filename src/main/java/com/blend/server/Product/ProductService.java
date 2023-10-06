@@ -4,6 +4,9 @@ import com.blend.server.category.Category;
 import com.blend.server.category.CategoryRepository;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
+import com.blend.server.productImage.ProductImage;
+import com.blend.server.productImage.ProductImageRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -12,11 +15,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional
+@RequiredArgsConstructor
 @Service
 public class ProductService {
 
@@ -24,26 +33,46 @@ public class ProductService {
 
     private final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
-        this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
-    }
+    private final ProductImageRepository productImageRepository;
 
-    public Product createProduct(Product product, long categoryId) {
+//    public Product createProduct(Product product, long categoryId) {
+//        log.info("---Creating Product---");
+//
+//        Category category = categoryRepository.findById(categoryId)
+//                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
+//
+//        product.setCategory(category);
+//
+//        log.info("Product created: {}", product);
+//
+//        return productRepository.save(product);
+//    }
+    public Product createProduct(Product product, long categoryId, List<ProductImage> productImages) {
         log.info("---Creating Product---");
 
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
 
         product.setCategory(category);
-
+        // 이미지 추가
+        if(productImages != null){
+            List<ProductImage> productImageList = productImages.stream()
+                    .map(image -> {
+                        product.addProductImage(image);
+                        return image;
+                    })
+                    .collect(Collectors.toList());
+        }
         return productRepository.save(product);
+
     }
 
     public Product updateProduct(long id,Product product,long categoryId) {
-        log.info("---Updating Product---");
+        log.info("--- Updating Product Id: {} ---",id);
 
         Product findProduct = findVerifiedProduct(id);
+
+        log.info("Updating Product: {}",product);
 
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
@@ -51,6 +80,8 @@ public class ProductService {
         product.setCategory(category);
 
         BeanUtils.copyProperties(product, findProduct,"productStatus");
+
+        log.info("Updated Product: {}",findProduct);
 
         return productRepository.save(findProduct);
     }
@@ -60,7 +91,11 @@ public class ProductService {
 
         Product findProduct = findVerifiedProduct(id);
 
+        log.info("Current status: {}",findProduct.getProductStatus());
+
         changeProductStatus(findProduct);
+
+        log.info("Updated status: {}",findProduct.getProductStatus());
 
         return productRepository.save(findProduct);
 
@@ -74,6 +109,7 @@ public class ProductService {
             Product product = optionalProduct.get();
             product.setViewCount(product.getViewCount()+1);
             this.productRepository.save(product);
+            log.info("Find Product: {}",product);
             return product;
         }else {
             log.warn("---Product Not Found---",id);
@@ -112,6 +148,8 @@ public class ProductService {
         Product findProduct = findVerifiedProduct(id);
 
         productRepository.deleteById(id);
+
+        log.info("Deleted Product {}",id);
     }
 
 
@@ -123,16 +161,23 @@ public class ProductService {
         Product findProduct =
                 optionalProduct.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.PRODUCT_NOT_FOUND));
+
+        log.info("Verified product: {}",findProduct);
+
         return findProduct;
 
     }
 
-    public void changeProductStatus(Product product){
-
-        if(product.getProductCount() <= 5 && product.getProductCount() >= 1){
+    public void changeProductStatus(Product product) {
+        if (ProductCountRange(product.getProductCount())) {
             product.setProductStatus(Product.ProductStatus.INSTOCK);
-        }if(product.getProductCount() == 0)
+        } else if (product.getProductCount() == 0) {
             product.setProductStatus(Product.ProductStatus.SOLDOUT);
+        }
+    }
+
+    private boolean ProductCountRange(int productCount) {
+        return productCount >= 1 && productCount <= 5;
     }
 
 

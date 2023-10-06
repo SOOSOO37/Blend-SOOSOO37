@@ -1,17 +1,15 @@
 package com.blend.server.Product;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.blend.server.global.audit.Auditable;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class ProductDetailResponseDto {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class ProductDetailResponseDto extends Auditable {
 
     private long id;
 
@@ -36,16 +34,34 @@ public class ProductDetailResponseDto {
     private int price;
 
     private int salePrice;
-
-    private String image;
-
     private String info;
 
     private String sizeInfo;
 
-    private LocalDateTime createdAt;
-
-    private LocalDateTime modifiedAt;
+    private List<String> imageLinks;
 
 
+
+    @Builder
+
+    public ProductDetailResponseDto(long id, String brand, String productName, long categoryId,
+                                    String name, int ranking, int viewCount, int reviewCount,
+                                    int likeCount, int productCount, int price, int salePrice,
+                                    String info, String sizeInfo, List<String> imageLinks) {
+        this.id = id;
+        this.brand = brand;
+        this.productName = productName;
+        this.categoryId = categoryId;
+        this.name = name;
+        this.ranking = ranking;
+        this.viewCount = viewCount;
+        this.reviewCount = reviewCount;
+        this.likeCount = likeCount;
+        this.productCount = productCount;
+        this.price = price;
+        this.salePrice = salePrice;
+        this.info = info;
+        this.sizeInfo = sizeInfo;
+        this.imageLinks = imageLinks;
+    }
 }

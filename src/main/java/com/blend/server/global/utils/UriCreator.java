@@ -1,4 +1,4 @@
-package com.blend.server.utils;
+package com.blend.server.global.utils;
 
 import org.springframework.web.util.UriComponentsBuilder;
 

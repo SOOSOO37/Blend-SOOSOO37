@@ -2,19 +2,22 @@ package com.blend.server.Product;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class ProductPostDto {
+@NoArgsConstructor
+public class ProductUpdateDto {
+
+    private long id;
 
     private String brand;
 
     private String productName;
 
-    //private long categoryId;
+    private long categoryId;
 
     private int price;
 
@@ -22,19 +25,17 @@ public class ProductPostDto {
 
     private Product.ProductStatus productStatus;
 
-    private String image;
-
-    private int reviewCount;
+    private int ranking;
 
     private int likeCount;
 
     private int productCount;
 
+    private String image;
+
     private String info;
 
     private String sizeInfo;
-
-
 
 
 }
