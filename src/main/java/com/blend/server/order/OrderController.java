@@ -1,6 +1,6 @@
 package com.blend.server.order;
 
-import com.blend.server.global.dto.MultiResponseDto;
+import com.blend.server.global.response.MultiResponseDto;
 import com.blend.server.global.utils.UriCreator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -17,7 +17,17 @@ public enum ExceptionCode {
     CARTPRODUCT_NOT_FOUND(404, "장바구니 상품이 존재하지 않습니다."),
 
     CARTPRODUCT_EXISTS(409, "이미 장바구니에 존재하는 상품입니다."),
-    IMAGE_NOT_FOUND(404, "해당 이미지가 존재하지 않습니다.");
+    IMAGE_NOT_FOUND(404, "해당 이미지가 존재하지 않습니다."),
+
+    USER_EMAIL_EXISTS(409, "이미 등록된 이메일입니다."),
+
+    USER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
+
+    USER_QUIT(404, "탈퇴한 회원입니다."),
+
+    SLEEPER_ACCOUNT(404, "휴면계정 입니다."),
+
+    USER_NICKNAME_EXISTS(409, "이미 등록된 닉네임입니다.");
 
 
     @Getter

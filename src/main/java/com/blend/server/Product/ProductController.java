@@ -2,7 +2,7 @@ package com.blend.server.Product;
 
 import com.blend.server.category.Category;
 import com.blend.server.category.CategoryService;
-import com.blend.server.global.dto.MultiResponseDto;
+import com.blend.server.global.response.MultiResponseDto;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.utils.UriCreator;
 import com.blend.server.productImage.ProductImage;
@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

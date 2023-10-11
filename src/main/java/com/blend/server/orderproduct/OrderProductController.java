@@ -1,6 +1,6 @@
 package com.blend.server.orderproduct;
 
-import com.blend.server.global.dto.MultiResponseDto;
+import com.blend.server.global.response.MultiResponseDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
