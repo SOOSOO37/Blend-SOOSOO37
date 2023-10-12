@@ -2,21 +2,25 @@ package com.blend.server.user;
 
 import com.blend.server.cart.Cart;
 import com.blend.server.global.audit.Auditable;
+import com.blend.server.order.Order;
+import com.blend.server.seller.Seller;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
-import javax.security.auth.Subject;
 import javax.validation.constraints.Email;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 @Setter
 @Entity
 @Getter
-public class User extends Auditable implements Principal {
+public class User extends Auditable implements Principal{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +45,13 @@ public class User extends Auditable implements Principal {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL )
     private Cart cart;
+
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "seller_id")
+    private Seller seller;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Order> orderList;
 
     @Override
     public String getName() {

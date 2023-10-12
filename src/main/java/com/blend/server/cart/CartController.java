@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -23,17 +25,6 @@ public class CartController {
 
     private final static String CART_DEFAULT_URL = "/carts";
     private final CartMapper cartMapper;
-
-    //유저 생성 후 유저 회원가입 시 장바구니 생기도록 구현
-    @PostMapping
-    public ResponseEntity createCart(Cart cart) {
-
-        cartService.createCart(cart);
-
-        URI location = UriCreator.createUri(CART_DEFAULT_URL, cart.getId());
-
-        return ResponseEntity.created(location).build();
-    }
 
     //장바구니 상품 등록
     @PostMapping("/{cart-id}/{product-id}")

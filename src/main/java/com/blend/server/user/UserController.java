@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +42,7 @@ public class UserController {
     @PatchMapping("/edit/nickname")
     public ResponseEntity updateNickName(@Valid @RequestBody UserPatchDto userPatchDto,
                                          @AuthenticationPrincipal User user) {
+
         userPatchDto.setId(user.getId());
         User findUser = service.updateUser(mapper.userPatchDtoToUser(userPatchDto));
         UserResponseDto response = mapper.userToUserResponseDto(findUser);

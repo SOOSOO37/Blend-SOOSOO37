@@ -68,6 +68,8 @@ public class WebSecurityConfig {
                     .antMatchers(HttpMethod.GET,"/users/my-page/**").hasRole("USER")
                     .antMatchers(HttpMethod.GET,"/users/**").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE,"/users/**").hasRole("USER")
+//                    .antMatchers(HttpMethod.PATCH,"/sellers/**").hasRole("SELLER")
+//                    .antMatchers(HttpMethod.GET,"/sellers/**").hasRole("SELLER")
                     .anyRequest().permitAll()); // 전부 허가
 
         return http.build();

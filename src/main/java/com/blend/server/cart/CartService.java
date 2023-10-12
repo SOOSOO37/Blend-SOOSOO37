@@ -24,11 +24,6 @@ public class CartService {
 
     private final ProductService productService;
 
-    // 멤버추가 유저 아이디당 1개 생성 (임시로직)
-    public Cart createCart(Cart cart) {
-
-        return cartRepository.save(cart);
-    }
 
     // 장바구니에 상품 담기
     public CartProduct addToCart(long cartId, long productId) {

@@ -3,6 +3,7 @@ package com.blend.server.user;
 import com.blend.server.security.utils.CustomAuthorityUtils;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
+import com.blend.server.seller.Seller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -116,5 +117,13 @@ public class UserService {
     private void checkUserStatus(User user){
         if(user.getUserStatus() == User.UserStatus.QUIT)
             throw new BusinessLogicException(ExceptionCode.USER_QUIT);
+    }
+
+    public Long findUserIdByUsername(String username) {
+        Optional<User> user = userRepository.findByEmail(username);
+        if (user != null) {
+            return user.get().getId();
+        }
+        return null; // 사용자를 찾을 수 없는 경우 null 반환 또는 예외 처리
     }
 }

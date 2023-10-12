@@ -119,6 +119,15 @@ public class JwtTokenProvider {
         return expiration;
     }
 
+    public void verifySignature(String jws, String base64EncodedSecretKey) {
+        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
+        Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(jws);
+    }
+
 //    private Key getKeyFromBase64EncodedKey(String base64SecretKey) {
 //        byte[] keyBytes = Decoders.BASE64.decode(base64SecretKey);
 //        Key key = Keys.hmacShaKeyFor(keyBytes);
@@ -126,5 +135,5 @@ public class JwtTokenProvider {
 //        return key;
 //    }
 
-
 }
+

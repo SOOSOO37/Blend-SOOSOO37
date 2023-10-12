@@ -39,6 +39,8 @@ public class CustomAuthorityUtils {
     public List<String> createRoles(User user) {
         if(user.getEmail().equals(adminEmail)) {
             return ADMIN_ROLES_STRING;
+        } else if (user.getSeller() != null) {
+            return SELLER_ROLES_STRING;
         }
         return USER_ROLES_STRING;
     }
@@ -49,6 +51,4 @@ public class CustomAuthorityUtils {
         }
         return USER_ROLES;
     }
-
-
 }
