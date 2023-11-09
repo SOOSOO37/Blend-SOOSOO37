@@ -1,5 +1,6 @@
 package com.blend.server.security.jwt;
 
+import com.blend.server.seller.Seller;
 import com.blend.server.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -37,8 +38,8 @@ public class JwtTokenProvider {
 
     public String generateAccessToken(Map<String,Object> claims, String subject,
                                       Date expiration, String base64SecretKey) {
-//        Key key = getKeyFromBase64EncodedKey(base64SecretKey);
-        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        Key key = getKeyFromBase64EncodedKey(base64SecretKey);
+
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -50,9 +51,9 @@ public class JwtTokenProvider {
     }
 
     public String generateAccessToken(User user){
-        //String base64SecretKey = encodeBase64SecretKey(secretKey);
-        //Key key = getKeyFromBase64EncodedKey(base64SecretKey);
-        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        String base64SecretKey = encodeBase64SecretKey(secretKey);
+        Key key = getKeyFromBase64EncodedKey(base64SecretKey);
+
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", user.getEmail());
@@ -70,9 +71,30 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public String generateAccessToken(Seller seller){
+        String base64SecretKey = encodeBase64SecretKey(secretKey);
+        Key key = getKeyFromBase64EncodedKey(base64SecretKey);
+
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("username", seller.getEmail());
+        claims.put("roles", seller.getRoles());
+
+        String subject = seller.getEmail();
+        Date expiration = getTokenExpiration(accessTokenExpirationMinutes);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(Calendar.getInstance().getTime())
+                .setExpiration(expiration)
+                .signWith(key)
+                .compact();
+    }
+
     public String generateRefreshToken(String subject, Date expiration, String base64EncodedSecretKey) {
-        //Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
-        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
+
 
         return Jwts.builder()
                 .setSubject(subject)
@@ -83,9 +105,8 @@ public class JwtTokenProvider {
     }
 
     public String generateRefreshToken(String email) {
-//        String base64SecretKey = encodeBase64SecretKey(secretKey);
-//        Key key = getKeyFromBase64EncodedKey(base64SecretKey);
-        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        String base64SecretKey = encodeBase64SecretKey(secretKey);
+        Key key = getKeyFromBase64EncodedKey(base64SecretKey);
 
         String subject = email;
         Date expiration = getTokenExpiration(refreshTokenExpirationMinutes);
@@ -100,8 +121,7 @@ public class JwtTokenProvider {
     }
 
     public Jws<Claims> getClaims(String jws, String base64SecretKey) {
-        //Key key = getKeyFromBase64EncodedKey(base64SecretKey);
-        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        Key key = getKeyFromBase64EncodedKey(base64SecretKey);
 
         Jws<Claims> claims = Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -128,12 +148,12 @@ public class JwtTokenProvider {
                 .parseClaimsJws(jws);
     }
 
-//    private Key getKeyFromBase64EncodedKey(String base64SecretKey) {
-//        byte[] keyBytes = Decoders.BASE64.decode(base64SecretKey);
-//        Key key = Keys.hmacShaKeyFor(keyBytes);
-//
-//        return key;
-//    }
+    private Key getKeyFromBase64EncodedKey(String base64SecretKey) {
+        byte[] keyBytes = Decoders.BASE64.decode(base64SecretKey);
+        Key key = Keys.hmacShaKeyFor(keyBytes);
+
+        return key;
+    }
 
 }
 

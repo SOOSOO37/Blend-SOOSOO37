@@ -1,22 +1,23 @@
 package com.blend.server.user;
 
+import com.blend.server.admin.Admin;
 import com.blend.server.cart.Cart;
 import com.blend.server.global.audit.Auditable;
 import com.blend.server.order.Order;
 import com.blend.server.seller.Seller;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
-
+@NoArgsConstructor
 @Setter
 @Entity
 @Getter
@@ -40,21 +41,35 @@ public class User extends Auditable implements Principal{
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus = UserStatus.ACTIVE;
 
+    @BatchSize(size = 10)
+    @Fetch(value = FetchMode.SUBSELECT)
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL )
     private Cart cart;
 
-    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "seller_id")
     private Seller seller;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "admin_id")
+    private Admin admin;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Order> orderList;
 
+    public User(String username, String s, List<GrantedAuthority> authorities) {
+        super();
+    }
+
     @Override
     public String getName() {
+        return null;
+    }
+
+    public Map.Entry<Object, Object> getRole() {
         return null;
     }
 
@@ -77,4 +92,8 @@ public class User extends Auditable implements Principal{
             this.description = description;
         }
     }
+    public User(Cart cart) {
+        this.cart = cart;
+    }
+
 }

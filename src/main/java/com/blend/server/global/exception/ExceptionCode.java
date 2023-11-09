@@ -25,6 +25,8 @@ public enum ExceptionCode {
 
     SELLER_NOT_FOUND(404, "존재하지 않는 판매자 입니다."),
 
+    ADMIN_NOT_FOUND(404, "존재하지 않는 판매자 입니다."),
+
     SELLER_WAIT(404, "가입 대기 중인 판매자입니다."),
 
     SELLER_NOT_ALLOWED(409, "권한이 없는 판매자입니다"),

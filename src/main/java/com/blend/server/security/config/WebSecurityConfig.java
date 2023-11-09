@@ -15,20 +15,29 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collection;
+
+
 
 @RequiredArgsConstructor
 @Configuration
@@ -43,6 +52,7 @@ public class WebSecurityConfig {
     private final CustomAuthorityUtils authorityUtils;
 
     private final CustomUserDetailsService userDetailsService;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -62,18 +72,17 @@ public class WebSecurityConfig {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                    .antMatchers("/carts/**").hasRole("USER")
-                    .antMatchers("/orders/**").hasRole("USER")
-                    .antMatchers(HttpMethod.PATCH,"/users/**").hasRole("USER")
-                    .antMatchers(HttpMethod.GET,"/users/my-page/**").hasRole("USER")
-                    .antMatchers(HttpMethod.GET,"/users/**").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.DELETE,"/users/**").hasRole("USER")
-//                    .antMatchers(HttpMethod.PATCH,"/sellers/**").hasRole("SELLER")
-//                    .antMatchers(HttpMethod.GET,"/sellers/**").hasRole("SELLER")
+                        .antMatchers("/admins/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.PATCH,"/users/**").hasAnyRole("USER","ADMIN")
+                        .antMatchers(HttpMethod.GET,"/users/**").hasRole("USER")
+                        .antMatchers(HttpMethod.DELETE,"/users").hasRole("USER")
+                        .antMatchers(HttpMethod.POST,"/products").hasRole("SELLER")
                     .anyRequest().permitAll()); // 전부 허가
+
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

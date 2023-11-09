@@ -6,6 +6,9 @@ import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
 import com.blend.server.productImage.ProductImage;
 import com.blend.server.productImage.ProductImageRepository;
+import com.blend.server.seller.Seller;
+import com.blend.server.seller.SellerRepository;
+import com.blend.server.seller.SellerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -33,38 +36,31 @@ public class ProductService {
 
     private final CategoryRepository categoryRepository;
 
+    private final SellerRepository sellerRepository;
+
+    private final SellerService sellerService;
+
     private final ProductImageRepository productImageRepository;
 
-//    public Product createProduct(Product product, long categoryId) {
-//        log.info("---Creating Product---");
-//
-//        Category category = categoryRepository.findById(categoryId)
-//                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
-//
-//        product.setCategory(category);
-//
-//        log.info("Product created: {}", product);
-//
-//        return productRepository.save(product);
-//    }
-    public Product createProduct(Product product, long categoryId, List<ProductImage> productImages) {
+    public Product createProduct(Product product, long categoryId,List<ProductImage> productImages,Seller seller) {
         log.info("---Creating Product---");
 
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
-
-        product.setCategory(category);
-        // 이미지 추가
-        if(productImages != null){
-            List<ProductImage> productImageList = productImages.stream()
-                    .map(image -> {
-                        product.addProductImage(image);
-                        return image;
-                    })
-                    .collect(Collectors.toList());
+        if (seller!=null) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
+            product.setCategory(category);
+            // 이미지 추가
+            if (productImages != null) {
+                List<ProductImage> productImageList = productImages.stream()
+                        .map(image -> {
+                            product.addProductImage(image);
+                            return image;
+                        })
+                        .collect(Collectors.toList());
+            }
+            return productRepository.save(product);
         }
-        return productRepository.save(product);
-
+        throw new BusinessLogicException(ExceptionCode.SELLER_NOT_FOUND);
     }
 
     public Product updateProduct(long id,Product product,long categoryId) {

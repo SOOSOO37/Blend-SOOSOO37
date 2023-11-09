@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -29,6 +31,8 @@ public class SellerService {
 
     private final SellerRepository sellerRepository;
     private final UserRepository userRepository;
+
+    private final SellerMapper sellerMapper;
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -40,14 +44,27 @@ public class SellerService {
         verifiedJoinEmail(seller);
         verifiedRegNumber(seller);
         setEncodedPassword(seller);
+        setRole(seller);
 
         return sellerRepository.save(seller);
+    }
+
+    public void setRole(Seller seller){
+        List<String> roles = authorityUtils.createSellerRoles(seller);
+        seller.setRoles(roles);
     }
 
     public Seller updateSeller (Seller seller){
         Seller findSeller = findVerifiedSeller(seller.getId());
 
-        BeanUtils.copyProperties(seller, findSeller);
+        Optional.ofNullable(seller.getPassword())
+                .ifPresent(password -> findSeller.setPassword(passwordEncoder.encode(password)));
+        Optional.ofNullable(seller.getName())
+                .ifPresent(name -> findSeller.setName(name));
+        Optional.ofNullable(seller.getAddress())
+                .ifPresent(address -> findSeller.setAddress(address));
+        Optional.ofNullable(seller.getPassword())
+                .ifPresent(phone -> findSeller.setPhone(phone));
 
         return sellerRepository.save(findSeller);
     }
@@ -89,16 +106,29 @@ public class SellerService {
         }
     }
 
-    public Seller findSeller(long id) {
-        Seller findSeller = findVerifiedSeller(id);
-        return findSeller;
+//    public Seller findSeller(long id) {
+//        Seller findSeller = findVerifiedSeller(id);
+//        return findSeller;
+//    }
+
+//    public Page<Product> findProducts(int size, int page,Seller seller) {
+//        Seller findSeller = findVerifiedSeller(seller.getId());
+//        return productRepository.findAllBySellerAndProductStatus(findSeller,
+//                Product.ProductStatus.SALE, PageRequest.of(page-1,size, Sort.by("id").descending()));
+//    }
+
+    public Page<Product> findProducts(int size, int page,Seller seller) {
+        Seller findSeller = findVerifiedSeller(seller.getId());
+        return productRepository.findAllBySellerAndProductStatus(findSeller,
+                Product.ProductStatus.SALE, PageRequest.of(page-1,size, Sort.by("id").descending()));
     }
 
-    public Page<Product> findProducts(int size, int page , long id) {
-        Seller findSeller = findVerifiedSeller(id);
-        return productRepository.findAllBySellerIdAndProductStatusNotLike(findSeller.getId(),
-                Product.ProductStatus.SOLDOUT, PageRequest.of(page,size, Sort.by("id").descending()));
-    }
+//    public List<SellerResponseDto> findSellerProductList(List<Seller> sellers) {
+//        return sellers.stream()
+//                .map(sellerMapper::sellerToSellerResponseDto)
+//                .collect(Collectors.toList());
+//    }
+
 
     public Page<Order> findOrders(int page, int size, long id){
         Seller findSeller = findVerifiedSeller(id);
@@ -126,13 +156,13 @@ public class SellerService {
     }
 
 
-    public void deleteProduct(long id, long sellerId) {
+    public void deleteProduct(long id, Seller seller) {
         Product product = productRepository.findById(id)
                 .orElseThrow(()->
                         new BusinessLogicException(ExceptionCode.PRODUCT_NOT_FOUND));
         if(product.getProductStatus().getStatusNumber() == 3)
             throw new BusinessLogicException(ExceptionCode.PRODUCT_NOT_FOUND);
-        if(product.getSeller().getId() != sellerId) {
+        if(product.getSeller().getId() != seller.getId()) {
             throw new BusinessLogicException(ExceptionCode.SELLER_NOT_ALLOWED);
         }
         product.setProductStatus(Product.ProductStatus.PRODUCT_DELETE);

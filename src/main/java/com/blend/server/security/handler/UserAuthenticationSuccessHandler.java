@@ -1,5 +1,6 @@
 package com.blend.server.security.handler;
 
+import com.blend.server.global.response.ErrorResponse;
 import com.blend.server.security.dto.LoginResponseDto;
 import com.blend.server.user.User;
 import com.google.gson.Gson;
@@ -13,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class UserAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
@@ -22,6 +24,7 @@ public class UserAuthenticationSuccessHandler implements AuthenticationSuccessHa
 
         log.info("# id: {}, Authenticated successfully", authentication.getName());
         sendSuccessResponse(response,authentication);
+
     }
 
     private static void sendSuccessResponse(HttpServletResponse response, Authentication authentication) throws  IOException {
@@ -33,4 +36,9 @@ public class UserAuthenticationSuccessHandler implements AuthenticationSuccessHa
         response.setStatus(HttpStatus.OK.value());
         response.getWriter().write(gson.toJson(responseDto));
     }
+
+
 }
+
+
+

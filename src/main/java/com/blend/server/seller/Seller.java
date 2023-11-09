@@ -3,15 +3,18 @@ package com.blend.server.seller;
 import com.blend.server.Product.Product;
 import com.blend.server.global.audit.Auditable;
 import com.blend.server.user.User;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
-
+@NoArgsConstructor
 @Setter
 @Getter
 @Entity
@@ -44,6 +47,11 @@ public class Seller extends Auditable implements Principal {
 
     @Column(nullable = false)
     private String bank;
+
+    @BatchSize(size = 10)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
 
     @Column
     @Enumerated(value = EnumType.STRING)

@@ -3,7 +3,7 @@ package com.blend.server.security.dto;
 import lombok.Getter;
 
 @Getter
-public class LoginDto {
+public class LoginRequestDto {
     private String username;
     private String password;
 }

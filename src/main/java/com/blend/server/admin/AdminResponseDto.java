@@ -1,21 +1,14 @@
-package com.blend.server.seller;
+package com.blend.server.admin;
 
-import com.blend.server.Product.ProductRepository;
-import com.blend.server.Product.ProductResponseDto;
+import com.blend.server.seller.Seller;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Setter
 @Getter
-public class SellerResponseDto {
-
-    private long id;
+public class AdminResponseDto {
 
     private String email;
-
-    private String password;
 
     private String name;
 
@@ -28,5 +21,7 @@ public class SellerResponseDto {
     private String bank;
 
     private String accountNumber;
+
+    private Seller.SellerStatus sellerStatus;
 
 }

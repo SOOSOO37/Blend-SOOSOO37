@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,13 +40,22 @@ public class UserService {
         return savedUser;
 
     }
-
-    public User updateUser(User user){
+    public User updateNickName(User user){
         User findUser = findVerifiedUser(user.getId());
 
         checkUserStatus(findUser);
+        Optional.ofNullable(user.getNickName())
+                .ifPresent(nickName -> findUser.setNickName(nickName));
 
-        BeanUtils.copyProperties(user, findUser);
+        return userRepository.save(findUser);
+    }
+
+    public User updatePassword(User user){
+        User findUser = findVerifiedUser(user.getId());
+
+        checkUserStatus(findUser);
+        Optional.ofNullable(user.getPassword())
+                .ifPresent(password -> findUser.setPassword(passwordEncoder.encode(password)));
 
         return userRepository.save(findUser);
     }
@@ -55,10 +65,7 @@ public class UserService {
         return findUser;
     }
 
-    public Page<User> findUsers(int page, int size){
 
-        return userRepository.findAllByUserStatus(User.UserStatus.ACTIVE,PageRequest.of(page,size, Sort.by("id").descending()));
-    }
 
     public void deleteUser(User user){
         User findUser = findVerifiedUser(user.getId());
@@ -117,13 +124,5 @@ public class UserService {
     private void checkUserStatus(User user){
         if(user.getUserStatus() == User.UserStatus.QUIT)
             throw new BusinessLogicException(ExceptionCode.USER_QUIT);
-    }
-
-    public Long findUserIdByUsername(String username) {
-        Optional<User> user = userRepository.findByEmail(username);
-        if (user != null) {
-            return user.get().getId();
-        }
-        return null; // 사용자를 찾을 수 없는 경우 null 반환 또는 예외 처리
     }
 }

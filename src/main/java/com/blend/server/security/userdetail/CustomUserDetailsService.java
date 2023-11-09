@@ -1,37 +1,93 @@
 package com.blend.server.security.userdetail;
-
+import com.blend.server.Product.Product;
+import com.blend.server.admin.AdminRepository;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
 import com.blend.server.security.utils.CustomAuthorityUtils;
+import com.blend.server.seller.Seller;
+import com.blend.server.seller.SellerRepository;
 import com.blend.server.user.User;
 import com.blend.server.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
-
+    private final SellerRepository sellerRepository;
+    private final AdminRepository adminRepository;
     private final CustomAuthorityUtils authorityUtils;
 
-    @Override // 시큐리티가 어떤 객체에게 허가를 해줄지 정하는 메소드
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        Optional<Seller> optionalSeller = sellerRepository.findByEmail(username);
+        Seller seller = optionalSeller.orElse(null);
+
         Optional<User> optionalUser = userRepository.findByEmail(username);
-        User findUser = optionalUser.orElseThrow(() ->
-                new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
-        return new CustomUserDetails(findUser);
+        User user = optionalUser.orElse(null);
+
+        if (seller != null && seller.getSellerStatus() != Seller.SellerStatus.SELLER_REJECTED) {
+            return new CustomSellerDetails(seller);
+        } else if (user != null && user.getUserStatus() != User.UserStatus.QUIT) {
+            return new CustomUserDetails(user);
+        }
+        throw new BusinessLogicException(ExceptionCode.USER_NOT_FOUND);
     }
-    //시큐리티는 우리가 만든 객체를 모르기 때문에 인식할 수 있는 UserDetails에 유저를 넣어줘야함
-    private final class CustomUserDetails extends User implements UserDetails{
+    private final class CustomSellerDetails extends Seller implements UserDetails {
+        CustomSellerDetails(Seller seller) {
+            setId(seller.getId());
+            setEmail(seller.getEmail());
+            setPassword(seller.getPassword());
+            setAccountNumber(seller.getAccountNumber());
+            setRoles(seller.getRoles());
+            setAddress(seller.getAddress());
+            setBank(seller.getBank());
+            setRegNumber(seller.getRegNumber());
+            setPhone(seller.getPhone());
+            setSellerStatus(seller.getSellerStatus());
+        }
+
+        @Override
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+            return authorityUtils.createAuthorities(this.getRoles());
+        }
+        @Override
+        public String getUsername() {
+            return getEmail();
+        }
+
+        @Override
+        public boolean isAccountNonExpired() {
+            return true; // 판매자의 계정 만료 여부에 따른 로직 추가
+        }
+
+        @Override
+        public boolean isAccountNonLocked() {
+            return true; // 판매자의 계정 잠김 여부에 따른 로직 추가
+        }
+
+        @Override
+        public boolean isCredentialsNonExpired() {
+            return true; // 판매자의 자격 증명 만료 여부에 따른 로직 추가
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return true; // 판매자의 계정 활성화 여부에 따른 로직 추가
+        }
+    }
+
+    private final class CustomUserDetails extends User implements UserDetails {
 
         CustomUserDetails(User user) {
             setId(user.getId());
@@ -54,22 +110,22 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         @Override
         public boolean isAccountNonExpired() {
-            return true;
+            return true; // 사용자의 계정 만료 여부에 따른 로직 추가
         }
 
         @Override
         public boolean isAccountNonLocked() {
-            return true;
+            return true; // 사용자의 계정 잠김 여부에 따른 로직 추가
         }
 
         @Override
         public boolean isCredentialsNonExpired() {
-            return true;
+            return true; // 사용자의 자격 증명 만료 여부에 따른 로직 추가
         }
 
         @Override
         public boolean isEnabled() {
-            return true;
+            return true; // 사용자의 계정 활성화 여부에 따른 로직 추가
         }
     }
 }

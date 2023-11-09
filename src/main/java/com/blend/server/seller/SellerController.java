@@ -1,6 +1,7 @@
 package com.blend.server.seller;
 
 import com.blend.server.Product.Product;
+import com.blend.server.Product.ProductDetailResponseDto;
 import com.blend.server.Product.ProductMapper;
 import com.blend.server.Product.ProductResponseDto;
 import com.blend.server.global.response.MultiResponseDto;
@@ -10,21 +11,30 @@ import com.blend.server.user.User;
 import com.blend.server.user.UserResponseDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/sellers")
 @RestController
 public class SellerController {
+
+    @Value("${config.domain}")
+    private String domain;
 
     private final static String SELLER_DEFAULT_URL = "/sellers";
     private final SellerService service;
@@ -42,39 +52,32 @@ public class SellerController {
         return ResponseEntity.created(location).build();
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity updateSeller(@PathVariable long id,
-                                       @RequestBody SellerPatchDto sellerPatchDto){
-        sellerPatchDto.setId(id);
-        Seller seller = service.updateSeller(mapper.sellerPatchDtoToSeller(sellerPatchDto));
+    @PatchMapping
+    public ResponseEntity updateSeller(@RequestBody SellerPatchDto sellerPatchDto,
+                                       @AuthenticationPrincipal Seller seller){
 
-        return new ResponseEntity<>(seller, HttpStatus.OK);
+        sellerPatchDto.setId(seller.getId());
+        Seller findSeller = service.updateSeller(mapper.sellerPatchDtoToSeller(sellerPatchDto));
+
+        return new ResponseEntity<>(findSeller, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity findSeller(@PathVariable long id) {
-        Seller findSeller = service.findSeller(id);
-        SellerResponseDto response = mapper.sellerToSellerResponseDto(findSeller);
-
-        return new ResponseEntity<>(response,HttpStatus.OK);
-    }
-
-    @GetMapping("/sale-product/{id}")
+    @GetMapping("/sale-product")
     public ResponseEntity findSaleProducts(@RequestParam int page,
                                            @RequestParam int size,
-                                           @PathVariable long id){
-
-        Page<Product> productPage = service.findProducts(page-1,size,id);
+                                           @AuthenticationPrincipal Seller seller){
+        //Seller findSeller = service.findVerifiedSeller(seller.getId());
+        Page<Product> productPage = service.findProducts(size, page, seller);
         List<Product> productList = productPage.getContent();
         List<ProductResponseDto> response = productMapper.productsToProductResponseDtos(productList);
 
-        return new ResponseEntity<>(new MultiResponseDto<>(response,productPage), HttpStatus.OK);
+        return new ResponseEntity<>(new MultiResponseDto<>(response, productPage), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{seller-id}/{product-id}")
-    public ResponseEntity deleteSaleProduct(@PathVariable("seller-id") long sellerId,
+    @DeleteMapping("/{product-id}")
+    public ResponseEntity deleteSaleProduct(@AuthenticationPrincipal Seller seller,
                                             @PathVariable("product-id") long productId){
-        service.deleteProduct(sellerId,productId);
+        service.deleteProduct(productId,seller);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

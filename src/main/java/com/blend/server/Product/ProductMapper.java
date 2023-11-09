@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,7 +60,16 @@ public interface ProductMapper {
         return productDetailResponseDto;
 
     }
-    List<ProductResponseDto> productsToProductResponseDtos(List<Product> products);
+    default List<ProductResponseDto> productsToProductResponseDtos(List<Product> products){
+       if (products == null){
+           throw new BusinessLogicException(ExceptionCode.PRODUCT_NOT_FOUND);
+       }
+       List<ProductResponseDto> list = new ArrayList<ProductResponseDto>(products.size());
+       for (Product product : products) {
+           list.add(productToProductResponseDto(product));
+       }
+       return list;
+    }
 
     default List<ProductImage> multipartFilesToProductImages(List<MultipartFile> productImages){
         if(productImages == null){

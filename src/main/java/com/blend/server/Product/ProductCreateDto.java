@@ -15,6 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductCreateDto {
 
+    private Long sellerId;
+
     private String brand;
 
     private String productName;
