@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +31,7 @@ public class Product extends Auditable {
     @Column(nullable = false)
     private String productName;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JsonManagedReference
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -54,6 +54,7 @@ public class Product extends Auditable {
     @Column(nullable = false)
     private int likeCount;
 
+    @Positive
     @Column(nullable = false)
     private int productCount;
 

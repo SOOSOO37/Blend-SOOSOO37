@@ -28,13 +28,6 @@ public class AdminService {
 
     private final SellerRepository sellerRepository;
 
-    private final AdminRepository adminRepository;
-
-    private final PasswordEncoder passwordEncoder;
-
-    private final CustomAuthorityUtils authorityUtils;
-
-
     public Page<Seller> findSellers(int page, int size){
         return sellerRepository.findAllBySellerStatus(Seller.SellerStatus.SELLER_WAIT, PageRequest.of(page, size, Sort.by("createdAt").descending()));
     }
@@ -58,31 +51,10 @@ public class AdminService {
         return findSeller;
     }
 
-    public void updateToUser(User user) {
-        List<String> roles = authorityUtils.createRoles(user);
-        user.setRoles(roles);
-        userRepository.save(user);
-    }
-
     private Seller findVerifiedSeller(Long id) {
         Optional<Seller> optionalSeller = sellerRepository.findById(id);
 
         return optionalSeller.orElseThrow(()-> new BusinessLogicException(ExceptionCode.SELLER_NOT_FOUND));
-    }
-
-    public Admin findVerifiedAdmin(long id){
-        Optional<Admin> optionalAdmin = adminRepository.findById(id);
-
-        return optionalAdmin.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADMIN_NOT_FOUND));
-    }
-    private void verifyExistsEmail(String email) {
-        Optional<Admin> admin = adminRepository.findByEmail(email);
-        Optional<User> user = userRepository.findByEmail(email);
-        Optional<Seller> seller = sellerRepository.findByEmail(email);
-
-        if(admin.isPresent() || user.isPresent() || seller.isPresent()) {
-            throw new BusinessLogicException(ExceptionCode.USER_EMAIL_EXISTS);
-        }
     }
 
 }

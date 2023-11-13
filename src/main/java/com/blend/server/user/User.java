@@ -5,6 +5,7 @@ import com.blend.server.cart.Cart;
 import com.blend.server.global.audit.Auditable;
 import com.blend.server.order.Order;
 import com.blend.server.seller.Seller;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
@@ -46,7 +47,7 @@ public class User extends Auditable implements Principal{
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL )
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Cart cart;
 
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
@@ -57,6 +58,7 @@ public class User extends Auditable implements Principal{
     @JoinColumn(name = "admin_id")
     private Admin admin;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Order> orderList;
 

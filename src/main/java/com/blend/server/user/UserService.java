@@ -1,5 +1,6 @@
 package com.blend.server.user;
 
+import com.blend.server.cart.Cart;
 import com.blend.server.security.utils.CustomAuthorityUtils;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
@@ -34,6 +35,7 @@ public class UserService {
         checkExistNickName(user.getNickName());
         setEncodedPassword(user);
         setRole(user);
+        makeUserCart(user);
         manageCart(user);
 
         User savedUser = userRepository.save(user);
@@ -119,6 +121,12 @@ public class UserService {
         if(user.getRoles().contains("ADMIN")|| user.getRoles().contains("SELLER")){
             user.setCart(null);
         }
+    }
+
+    private void makeUserCart(User user) {
+        Cart cart = new Cart();
+        cart.setUser(user);
+        user.setCart(cart);
     }
 
     private void checkUserStatus(User user){

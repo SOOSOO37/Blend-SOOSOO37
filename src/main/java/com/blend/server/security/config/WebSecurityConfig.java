@@ -76,7 +76,29 @@ public class WebSecurityConfig {
                         .antMatchers(HttpMethod.PATCH,"/users/**").hasAnyRole("USER","ADMIN")
                         .antMatchers(HttpMethod.GET,"/users/**").hasRole("USER")
                         .antMatchers(HttpMethod.DELETE,"/users").hasRole("USER")
+                        .antMatchers(HttpMethod.PATCH,"/sellers").hasRole("SELLER")
+                        .antMatchers(HttpMethod.GET,"/sellers/**").hasRole("SELLER")
+                        .antMatchers(HttpMethod.DELETE,"/sellers/**").hasRole("SELLER")
                         .antMatchers(HttpMethod.POST,"/products").hasRole("SELLER")
+                        .antMatchers(HttpMethod.PATCH,"/products/**").hasRole("SELLER")
+                        .antMatchers(HttpMethod.DELETE,"/products/**").hasRole("SELLER")
+                        .antMatchers(HttpMethod.GET,"/orderProducts/**").hasRole("SELLER")
+                        .antMatchers(HttpMethod.PATCH,"/orderProducts/**").hasRole("SELLER")
+                        .antMatchers(HttpMethod.POST,"/orders").hasRole("USER")
+                        .antMatchers(HttpMethod.PATCH,"/orders/**").hasRole("USER")
+                        .antMatchers(HttpMethod.GET,"/orders/**").hasRole("USER")
+                        .antMatchers(HttpMethod.GET,"/orders").hasRole("USER")
+                        .antMatchers(HttpMethod.POST,"/categories").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.POST,"/carts/**").hasRole("USER")
+                        .antMatchers(HttpMethod.GET,"/carts/**").hasRole("USER")
+                        .antMatchers(HttpMethod.PATCH,"/carts/**").hasRole("USER")
+                        .antMatchers(HttpMethod.DELETE,"/carts/**").hasRole("USER")
+                        .antMatchers(HttpMethod.DELETE,"/carts").hasRole("USER")
+                        .antMatchers(HttpMethod.GET,"/admins/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.PATCH,"/admins/**").hasRole("ADMIN")
+
+
+
                     .anyRequest().permitAll()); // 전부 허가
 
 

@@ -2,7 +2,9 @@ package com.blend.server.seller;
 
 import com.blend.server.Product.Product;
 import com.blend.server.global.audit.Auditable;
+import com.blend.server.order.Order;
 import com.blend.server.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -60,8 +62,14 @@ public class Seller extends Auditable implements Principal {
     @OneToOne(mappedBy = "seller", cascade = CascadeType.PERSIST)
     private User user;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "seller", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Product> product;
+
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "seller", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Order> orders = new ArrayList<>();
 
     public enum SellerStatus {
 

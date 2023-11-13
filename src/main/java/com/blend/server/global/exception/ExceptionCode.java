@@ -8,13 +8,19 @@ public enum ExceptionCode {
 
     PRODUCT_EXISTS(409, "이미  존재하는 상품입니다."),
 
+    QUANTITY_EXCEEDED(404,"제품 수량을 초과했습니다."),
+
     CATEGORY_NOT_FOUND(404, "해당 카테고리가 존재하지 않습니다."),
+
+    CATEGORY_EXISTS(409,"이미 존재하는 카테고리 입니다."),
 
     ORDER_NOT_FOUND(404, "해당 주문이 존재하지 않습니다."),
 
     DO_NOT_NEXTSTEP(403, "변경 불가능한 진행단계 입니다."),
 
     CARTPRODUCT_NOT_FOUND(404, "장바구니 상품이 존재하지 않습니다."),
+
+    CART_NOT_FOUND(404, "장바구니가 존재하지 않습니다."),
 
     CARTPRODUCT_EXISTS(409, "이미 장바구니에 존재하는 상품입니다."),
     IMAGE_NOT_FOUND(404, "해당 이미지가 존재하지 않습니다."),

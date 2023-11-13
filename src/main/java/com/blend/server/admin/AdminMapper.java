@@ -13,17 +13,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface AdminMapper {
 
-    Admin adminPostDtoToAdmin (AdminPostDto adminPostDto);
-
-    Admin adminPatchDtoToAdmin (AdminPatchDto adminPatchDto);
-
-    AdminResponseDto adminToAdminResponseDto(Admin admin);
     AdminResponseDto sellerToAdminResponseDto(Seller seller);
-
-    AdminSellerPatchDto sellerToSellerUpdateDto(Seller seller);
-
-    @Mapping(source = "id", target = "seller.id")
-    User sellerUpdateDtoToUser(AdminSellerPatchDto updateToUser);
 
    List<AdminResponseDto> sellersToAdminResponseDto(List<Seller> sellers);
 

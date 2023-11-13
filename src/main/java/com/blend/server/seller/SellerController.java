@@ -7,6 +7,8 @@ import com.blend.server.Product.ProductResponseDto;
 import com.blend.server.global.response.MultiResponseDto;
 import com.blend.server.global.utils.UriCreator;
 import com.blend.server.order.Order;
+import com.blend.server.order.OrderMapper;
+import com.blend.server.order.OrderResponseDto;
 import com.blend.server.user.User;
 import com.blend.server.user.UserResponseDto;
 import io.swagger.annotations.ApiOperation;
@@ -39,8 +41,9 @@ public class SellerController {
     private final static String SELLER_DEFAULT_URL = "/sellers";
     private final SellerService service;
     private final SellerMapper mapper;
-
     private final ProductMapper productMapper;
+
+    private final OrderMapper orderMapper;
 
     @PostMapping
     private ResponseEntity createSeller(@Valid @RequestBody SellerPostDto sellerPostDto){
@@ -66,7 +69,7 @@ public class SellerController {
     public ResponseEntity findSaleProducts(@RequestParam int page,
                                            @RequestParam int size,
                                            @AuthenticationPrincipal Seller seller){
-        //Seller findSeller = service.findVerifiedSeller(seller.getId());
+
         Page<Product> productPage = service.findProducts(size, page, seller);
         List<Product> productList = productPage.getContent();
         List<ProductResponseDto> response = productMapper.productsToProductResponseDtos(productList);
@@ -80,8 +83,4 @@ public class SellerController {
         service.deleteProduct(productId,seller);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
-
-
 }

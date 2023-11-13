@@ -20,7 +20,6 @@ public interface UserMapper {
         User user = new User(cart);
 
         BeanUtils.copyProperties(userPostDto,user);
-        //user.setCart(cart);
 
         return user;
     }

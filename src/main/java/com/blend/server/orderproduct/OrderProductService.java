@@ -2,6 +2,9 @@ package com.blend.server.orderproduct;
 
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
+import com.blend.server.order.Order;
+import com.blend.server.seller.Seller;
+import com.blend.server.seller.SellerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,9 +23,13 @@ public class OrderProductService {
 
     private final OrderProductRepository orderProductRepository;
 
-    public OrderProduct updateOrderStatus(long orderProductId, OrderProductUpdateDto orderProductUpdateDto) {
+    private final SellerService sellerService;
+
+    public OrderProduct updateOrderStatus(long orderProductId, OrderProductUpdateDto orderProductUpdateDto,Seller seller) {
 
         OrderProduct orderProduct = findVerifiedOrderProduct(orderProductId);
+
+        verifySeller(orderProductId,seller.getId());
 
         changeStatus(orderProduct, orderProductUpdateDto.getOrderProductStatus());
 
@@ -51,11 +58,12 @@ public class OrderProductService {
         return newStatusNum == currentStatusNum + 1;
     }
 
-
+    //
     // 판매자 전체 주문 조회
-    public Page<OrderProduct> findAllOrderProduct (int page, int size){
+    public Page<OrderProduct> findAllOrderProductBySeller (int page, int size, Seller seller){
+        Seller findSeller = sellerService.findVerifiedSeller(seller.getId());
 
-        return orderProductRepository.findAll(PageRequest.of(page,size, Sort.by("order.createdAt").descending()));
+        return orderProductRepository.findByProductSeller(findSeller,PageRequest.of(page,size, Sort.by("order.createdAt").descending()));
     }
 
 
@@ -76,6 +84,15 @@ public class OrderProductService {
         if(orderProduct.getOrderProductStatus() == DELIVERY_PROCESS)
             orderProduct.setTrackingNumber(trackingNumber);
         orderProductRepository.save(orderProduct);
+    }
+
+    public void verifySeller(long orderProductId, long sellerId){
+        OrderProduct findOrderProduct = findVerifiedOrderProduct(orderProductId);
+        long dbSellerId = findOrderProduct.getProduct().getSeller().getId();
+
+        if(sellerId != dbSellerId){
+            throw new BusinessLogicException(ExceptionCode.SELLER_NOT_FOUND);
+        }
     }
 
 }

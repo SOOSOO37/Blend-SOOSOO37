@@ -30,6 +30,8 @@ public interface ProductMapper {
     @Mapping(source = "categoryId", target = "category.id")
     Product productPatchDtoToProduct(ProductUpdateDto productUpdateDto);
 
+    Product productStatusPatchDtoToProduct(ProductStatusUpdateDto productStatusUpdateDto);
+
     static ProductResponseDto productToProductResponseDto(Product product){
         ProductResponseDto productResponseDto = new ProductResponseDto();
 

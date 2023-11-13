@@ -106,55 +106,11 @@ public class SellerService {
         }
     }
 
-//    public Seller findSeller(long id) {
-//        Seller findSeller = findVerifiedSeller(id);
-//        return findSeller;
-//    }
-
-//    public Page<Product> findProducts(int size, int page,Seller seller) {
-//        Seller findSeller = findVerifiedSeller(seller.getId());
-//        return productRepository.findAllBySellerAndProductStatus(findSeller,
-//                Product.ProductStatus.SALE, PageRequest.of(page-1,size, Sort.by("id").descending()));
-//    }
-
     public Page<Product> findProducts(int size, int page,Seller seller) {
         Seller findSeller = findVerifiedSeller(seller.getId());
         return productRepository.findAllBySellerAndProductStatus(findSeller,
                 Product.ProductStatus.SALE, PageRequest.of(page-1,size, Sort.by("id").descending()));
     }
-
-//    public List<SellerResponseDto> findSellerProductList(List<Seller> sellers) {
-//        return sellers.stream()
-//                .map(sellerMapper::sellerToSellerResponseDto)
-//                .collect(Collectors.toList());
-//    }
-
-
-    public Page<Order> findOrders(int page, int size, long id){
-        Seller findSeller = findVerifiedSeller(id);
-        return orderRepository.findAllByOrderStatusAndUserId(Order.OrderStatus.ORDER_DONE, findSeller.getId(),
-                PageRequest.of(page,size, Sort.by("id").descending()));
-    }
-
-    public Order findOrderStatus(Long orderId, Order.OrderStatus orderStatus) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ORDER_NOT_FOUND));
-
-        verifiedOrderStatus(order, orderStatus);
-
-        return order;
-    }
-
-    private void verifiedOrderStatus(Order order, Order.OrderStatus orderStatus) {
-
-        int verifiedStatusNumber = order.getOrderStatus().getNumber();
-        int targetStatusNumber = orderStatus.getNumber();
-
-        if (verifiedStatusNumber >= targetStatusNumber) {
-            throw new BusinessLogicException(ExceptionCode.DO_NOT_NEXTSTEP);
-        }
-    }
-
 
     public void deleteProduct(long id, Seller seller) {
         Product product = productRepository.findById(id)

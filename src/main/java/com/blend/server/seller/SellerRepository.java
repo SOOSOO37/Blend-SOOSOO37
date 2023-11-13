@@ -11,8 +11,6 @@ public interface SellerRepository extends JpaRepository<Seller,Long> {
 
     Optional<Seller> findByRegNumber(String regNumber);
 
-    Optional<Seller> findByUser(User user);
-
     Optional<Seller> findByEmail(String email);
 
     Page<Seller> findAllBySellerStatus(Seller.SellerStatus sellerStatus, Pageable pageable);

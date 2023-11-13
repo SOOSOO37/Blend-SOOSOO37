@@ -54,12 +54,11 @@ public class ProductController {
         logger.info("-------Creating Product-------");
 
         if (seller == null) {
-            // 판매자가 로그인되어 있지 않으면 401 Unauthorized 상태 코드와 메시지 반환
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Seller not authenticated.");
         }
 
         try {
-            // ProductCreateDto를 Product 엔티티로 매핑
+
             Product product = mapper.productPostDtoToProduct(productCreateDto);
 
             List<ProductImage> productImageList = mapper.multipartFilesToProductImages(imageFiles);
@@ -77,18 +76,22 @@ public class ProductController {
         }
 
     }
-
+    //판매자
     @ApiOperation(value = "상품 수정 API")
     @PatchMapping("/{id}")
     public ResponseEntity updateProduct(@PathVariable("id") long id,
-                                        @RequestBody ProductUpdateDto productUpdateDto) {
+                                        @RequestBody ProductUpdateDto productUpdateDto,
+                                        @AuthenticationPrincipal Seller seller) {
         logger.info("------- Updating Product -------", id);
+        if(seller == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Seller not authenticated.");
+        }
         productUpdateDto.setId(id);
-        Product updateProduct = productService.updateProduct(id,mapper.productPatchDtoToProduct(productUpdateDto), productUpdateDto.getCategoryId());
+        Product updateProduct = productService.updateProduct(seller,id,mapper.productPatchDtoToProduct(productUpdateDto), productUpdateDto.getCategoryId());
 
         logger.info("------- Updated Product -------", id);
 
-        return new ResponseEntity<>(mapper.productToProductDetailResponseDto(updateProduct,domain), HttpStatus.OK);
+        return new ResponseEntity<>(updateProduct, HttpStatus.OK);
     }
 
     @ApiOperation(value = "상품 조회 API")
@@ -139,13 +142,16 @@ public class ProductController {
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.productsToProductResponseDtos(productList),productPage),HttpStatus.OK);
 
     }
-
+    //판매자 기능
     @ApiOperation(value = "상품 삭제 API")
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteProduct(@PathVariable("id")long id){
+    public ResponseEntity deleteProduct(@PathVariable("id")long id,
+                                        @AuthenticationPrincipal Seller seller){
         logger.info("----- deleting Product -----",id);
-
-        productService.deleteProduct(id);
+        if(seller == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Seller not authenticated.");
+        }
+        productService.deleteProduct(id,seller);
 
         logger.info("----- deleted Product -----",id);
 
@@ -168,16 +174,24 @@ public class ProductController {
         return new ResponseEntity<>(new MultiResponseDto<>(mapper.productsToProductResponseDtos(productList),productPage),HttpStatus.OK);
 
     }
-
+    //판매자 기능
     @ApiOperation(value = "상품 상태 변경 API")
     @PatchMapping("/{id}/status")
-    public ResponseEntity updateStatus(@PathVariable("id")long id){
-        logger.info("----- Updating Status -----",id);
+    public ResponseEntity updateStatus(@PathVariable("id")long id,
+                                       @RequestBody ProductStatusUpdateDto productStatusUpdateDto,
+                                       @AuthenticationPrincipal Seller seller){
 
-        Product product = productService.updateStatus(id);
+        logger.info("------- Updating Product -------", id);
+        if(seller == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Seller not authenticated.");
+        }
+        productStatusUpdateDto.setId(id);
+        Product updateProduct = productService.updateStatus(id,seller,mapper.productStatusPatchDtoToProduct(productStatusUpdateDto));
 
-        logger.info("----- Updated Status -----",id);
-        return new ResponseEntity<>(product,HttpStatus.OK);
+        logger.info("------- Updated Product -------", id);
+
+        return new ResponseEntity<>(mapper.productToProductDetailResponseDto(updateProduct,domain), HttpStatus.OK);
 
     }
+
 }

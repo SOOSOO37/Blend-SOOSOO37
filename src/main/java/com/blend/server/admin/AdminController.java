@@ -31,15 +31,7 @@ public class AdminController {
 
     private final  AdminMapper mapper;
     private final AdminService adminService;
-
-    private final SellerService sellerService;
-
     private final UserMapper userMapper;
-
-    private final SellerMapper sellerMapper;
-
-    private final static String ADMIN_DEFAULT_URL = "/admins";
-
 
     @GetMapping("/all")
     public ResponseEntity findSellers(@RequestParam(defaultValue = "1") int page,
@@ -64,20 +56,10 @@ public class AdminController {
     @PatchMapping("/approval/{seller-id}")
     public ResponseEntity approveSeller(@PathVariable("seller-id")long sellerId){
         Seller updateSeller = adminService.approveSeller(sellerId);
+        AdminResponseDto response = mapper.sellerToAdminResponseDto(updateSeller);
 
-        return updateToUser(updateSeller);
+        return new ResponseEntity<>(response,HttpStatus.OK);
 
-    }
-
-    public ResponseEntity updateToUser(Seller seller) {
-
-        sellerService.verifiedApproveSeller(seller);
-        AdminSellerPatchDto update = mapper.sellerToSellerUpdateDto(seller);
-        User user = mapper.sellerUpdateDtoToUser(update);
-        adminService.updateToUser(user);
-
-        AdminResponseDto response = mapper.sellerToAdminResponseDto(seller);
-        return new ResponseEntity(response, HttpStatus.OK);
     }
 
     @PatchMapping("/rejected/{seller-id}")
