@@ -1,5 +1,4 @@
 package com.blend.server.security.userdetail;
-import com.blend.server.Product.Product;
 import com.blend.server.admin.AdminRepository;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
@@ -10,7 +9,6 @@ import com.blend.server.user.User;
 import com.blend.server.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

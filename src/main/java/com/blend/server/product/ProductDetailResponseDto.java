@@ -1,9 +1,9 @@
-package com.blend.server.Product;
+package com.blend.server.product;
 
 import com.blend.server.global.audit.Auditable;
+import com.blend.server.review.ReviewDetailResponseDto;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -40,6 +40,10 @@ public class ProductDetailResponseDto extends Auditable {
 
     private List<String> imageLinks;
 
+    private List<ReviewDetailResponseDto> reviewList;
+
+
+
 
 
     @Builder
@@ -47,7 +51,7 @@ public class ProductDetailResponseDto extends Auditable {
     public ProductDetailResponseDto(long id, String brand, String productName, long categoryId,
                                     String name, int ranking, int viewCount, int reviewCount,
                                     int likeCount, int productCount, int price, int salePrice,
-                                    String info, String sizeInfo, List<String> imageLinks) {
+                                    String info, String sizeInfo, List<String> imageLinks,List<ReviewDetailResponseDto> reviewList) {
         this.id = id;
         this.brand = brand;
         this.productName = productName;
@@ -63,5 +67,6 @@ public class ProductDetailResponseDto extends Auditable {
         this.info = info;
         this.sizeInfo = sizeInfo;
         this.imageLinks = imageLinks;
+        this.reviewList = reviewList;
     }
 }

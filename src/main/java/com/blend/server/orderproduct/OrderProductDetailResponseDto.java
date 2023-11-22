@@ -1,8 +1,7 @@
 package com.blend.server.orderproduct;
 
-import com.blend.server.Product.ProductResponseDto;
+import com.blend.server.product.ProductResponseDto;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter

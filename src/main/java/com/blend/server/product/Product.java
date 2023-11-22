@@ -1,13 +1,13 @@
-package com.blend.server.Product;
+package com.blend.server.product;
 
 import com.blend.server.category.Category;
 import com.blend.server.global.audit.Auditable;
 import com.blend.server.orderproduct.OrderProduct;
 
 import com.blend.server.productImage.ProductImage;
+import com.blend.server.review.Review;
 import com.blend.server.seller.Seller;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -76,6 +76,9 @@ public class Product extends Auditable {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductImage> productImages = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Review> reviews;
+
     public enum ProductStatus{
 
         SALE(1,"판매 중"),
@@ -103,5 +106,14 @@ public class Product extends Auditable {
             productImage.addProduct(this);
         }
     }
+
+    public void addReview(Review review) {
+        if (this.reviews == null) {
+            this.reviews = new ArrayList<>();
+        }
+        this.reviews.add(review);
+        review.setProduct(this);
+    }
+
 
 }

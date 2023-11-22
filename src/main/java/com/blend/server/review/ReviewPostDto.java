@@ -1,19 +1,24 @@
-package com.blend.server.orderproduct;
+package com.blend.server.review;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderProductDto {
+public class ReviewPostDto {
+
+    private long userId;
 
     private long productId;
 
-    private int quantity;
+    private String title;
 
+    private String content;
 
+    private int score;
 }

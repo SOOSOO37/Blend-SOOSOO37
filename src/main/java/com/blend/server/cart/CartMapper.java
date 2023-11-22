@@ -1,11 +1,7 @@
 package com.blend.server.cart;
 
-import com.blend.server.Product.Product;
-import com.blend.server.Product.ProductMapper;
-import com.blend.server.Product.ProductResponseDto;
-import com.blend.server.order.Order;
-import com.blend.server.order.OrderCreateDto;
-import com.blend.server.user.User;
+import com.blend.server.product.ProductMapper;
+import com.blend.server.product.ProductResponseDto;
 import org.mapstruct.Mapper;
 
 import java.util.List;

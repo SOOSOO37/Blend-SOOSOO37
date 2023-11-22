@@ -1,25 +1,23 @@
-package com.blend.server.Product;
+package com.blend.server.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductCreateDto {
+public class ProductUpdateDto {
 
-    private Long sellerId;
+    private long id;
 
     private String brand;
 
     private String productName;
+
+    private long categoryId;
 
     private int price;
 
@@ -27,14 +25,17 @@ public class ProductCreateDto {
 
     private Product.ProductStatus productStatus;
 
-    private int reviewCount;
+    private int ranking;
 
     private int likeCount;
 
     private int productCount;
 
+    private String image;
+
     private String info;
 
     private String sizeInfo;
+
 
 }

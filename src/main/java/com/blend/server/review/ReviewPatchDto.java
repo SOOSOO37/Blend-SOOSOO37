@@ -1,4 +1,4 @@
-package com.blend.server.orderproduct;
+package com.blend.server.review;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,11 +9,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderProductDto {
+public class ReviewPatchDto {
 
-    private long productId;
+    private long id;
 
-    private int quantity;
+    private String title;
 
+    private String content;
 
+    private int score;
 }

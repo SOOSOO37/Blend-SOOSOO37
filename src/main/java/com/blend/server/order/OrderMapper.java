@@ -1,7 +1,7 @@
 package com.blend.server.order;
 
-import com.blend.server.Product.Product;
-import com.blend.server.Product.ProductMapper;
+import com.blend.server.product.Product;
+import com.blend.server.product.ProductMapper;
 import com.blend.server.orderproduct.OrderProduct;
 import com.blend.server.orderproduct.OrderProductDetailResponseDto;
 import org.springframework.beans.BeanUtils;

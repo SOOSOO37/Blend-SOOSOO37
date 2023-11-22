@@ -1,20 +1,17 @@
 package com.blend.server.seller;
 
-import com.blend.server.Product.Product;
-import com.blend.server.Product.ProductRepository;
+import com.blend.server.product.Product;
+import com.blend.server.product.ProductRepository;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
-import com.blend.server.order.Order;
 import com.blend.server.order.OrderRepository;
 import com.blend.server.security.utils.CustomAuthorityUtils;
 import com.blend.server.user.User;
 import com.blend.server.user.UserRepository;
 import com.blend.server.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional

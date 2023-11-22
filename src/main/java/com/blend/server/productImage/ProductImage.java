@@ -1,9 +1,7 @@
 package com.blend.server.productImage;
 
-import com.blend.server.Product.Product;
-import lombok.Builder;
+import com.blend.server.product.Product;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;

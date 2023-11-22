@@ -1,7 +1,7 @@
 package com.blend.server.category;
 
 
-import com.blend.server.Product.Product;
+import com.blend.server.product.Product;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
