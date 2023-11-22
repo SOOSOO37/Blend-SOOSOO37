@@ -5,11 +5,13 @@ import com.blend.server.global.audit.Auditable;
 import com.blend.server.orderproduct.OrderProduct;
 
 import com.blend.server.productImage.ProductImage;
+import com.blend.server.seller.Seller;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +31,13 @@ public class Product extends Auditable {
     @Column(nullable = false)
     private String productName;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JsonManagedReference
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private Seller seller;
 
     @JsonBackReference
     @OneToMany(mappedBy = "product",cascade = CascadeType.REMOVE)
@@ -49,6 +54,7 @@ public class Product extends Auditable {
     @Column(nullable = false)
     private int likeCount;
 
+    @Positive
     @Column(nullable = false)
     private int productCount;
 
@@ -76,7 +82,9 @@ public class Product extends Auditable {
 
         INSTOCK(2,"재고 5개 미만"),
 
-        SOLDOUT(3,"품절");
+        SOLDOUT(3,"품절"),
+
+        PRODUCT_DELETE(4,"삭제상품");
 
         @Getter
         public int statusNumber;

@@ -2,6 +2,8 @@ package com.blend.server.order;
 
 import com.blend.server.global.audit.Auditable;
 import com.blend.server.orderproduct.OrderProduct;
+import com.blend.server.seller.Seller;
+import com.blend.server.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
@@ -39,8 +41,18 @@ public class Order extends Auditable {
     private OrderStatus orderStatus = OrderStatus.ORDER_DONE;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<OrderProduct> orderProductList = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private Seller seller;
+
 
     public enum OrderStatus {
 
@@ -59,5 +71,6 @@ public class Order extends Auditable {
             this.number = number;
             this.description = description;
         }
+
     }
 }

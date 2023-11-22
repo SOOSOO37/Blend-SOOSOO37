@@ -61,6 +61,7 @@ public class OrderServiceTest {
             Order createdOrder = orderService.createOrder(order);
 
             assertNotNull(createdOrder);
+            assertEquals(order, createdOrder);
         }
 
     @Test

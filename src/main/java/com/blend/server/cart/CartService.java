@@ -4,6 +4,8 @@ import com.blend.server.Product.Product;
 import com.blend.server.Product.ProductService;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
+import com.blend.server.order.Order;
+import com.blend.server.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,11 +26,6 @@ public class CartService {
 
     private final ProductService productService;
 
-    // 멤버추가 유저 아이디당 1개 생성 (임시로직)
-    public Cart createCart(Cart cart) {
-
-        return cartRepository.save(cart);
-    }
 
     // 장바구니에 상품 담기
     public CartProduct addToCart(long cartId, long productId) {
@@ -69,14 +66,19 @@ public class CartService {
 
     }
 
-    public Page<CartProduct> findCartProducts(int page, int size, long cartId) {
-        // cartId를 사용하여 Cart 객체를 검색
-        Cart cart = findVerifiedCart(cartId);
+    public Cart findVerifiedCartByUser(User user){
+        Cart findCart = cartRepository.findByUser(user)
+                .orElseThrow(()->{
+                    throw new BusinessLogicException(ExceptionCode.CART_NOT_FOUND);
+                });
+        return findCart;
+    }
 
-        // PageRequest를 사용하여 페이지 및 사이즈 설정
+    public Page<CartProduct> findCartProducts(int page, int size, User user) {
+
+        Cart cart = findVerifiedCartByUser(user);
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        // Cart 객체를 사용하여 CartProduct를 검색
         return cartProductRepository.findByCart(pageRequest,cart);
     }
 
@@ -85,7 +87,7 @@ public class CartService {
         cartProductRepository.deleteByProductIdAndCartId(productId,cartId);
     }
 
-    public void deleteCartProductsByCartId(Long cartId){
+    public void deleteCartProductsByUser(Long cartId){
         cartProductRepository.deleteAllByCartId(cartId);
     }
 
@@ -101,13 +103,12 @@ public class CartService {
 
     public void reduceCount(long productId, long cartId){
         CartProduct findCartProduct = findVerifiedCartProduct(cartId,productId);
-        if(findCartProduct.getProductCount() == 0){
+        if(findCartProduct.getProductCount() < 1){
             throw new RuntimeException("최소 수량은 1개 입니다.");
         }else {
             findCartProduct.setProductCount(findCartProduct.getProductCount() -1);
         }
         cartProductRepository.save(findCartProduct);
     }
-
 
 }

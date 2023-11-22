@@ -5,6 +5,7 @@ import com.blend.server.Product.ProductMapper;
 import com.blend.server.Product.ProductResponseDto;
 import com.blend.server.order.Order;
 import com.blend.server.order.OrderCreateDto;
+import com.blend.server.user.User;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface CartMapper {
-    default CartResponseDto cartProductsToCartResponseDto (List<CartProduct> cartProductList,long cartId){
+    default CartResponseDto cartProductsToCartResponseDto (List<CartProduct> cartProductList, Cart cart){
         CartResponseDto cartResponseDto = new CartResponseDto();
 
         List<CartProductResponseDto> cartProductDtoList = cartProductList.stream()
@@ -27,7 +28,7 @@ public interface CartMapper {
                     return cartProductResponseDto;
                 }).collect(Collectors.toList());
 
-        cartResponseDto.setCartId(cartId);
+        cartResponseDto.setCartId(cart.getId());
         cartResponseDto.setCartProductList(cartProductDtoList);
 
         return cartResponseDto;

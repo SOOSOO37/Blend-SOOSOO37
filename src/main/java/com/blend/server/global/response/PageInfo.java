@@ -1,4 +1,4 @@
-package com.blend.server.global.dto;
+package com.blend.server.global.response;
 
 import lombok.*;
 

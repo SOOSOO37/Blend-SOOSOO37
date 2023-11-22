@@ -12,6 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderCreateDto {
 
+    private long userId;
+
     private String receiver;
 
     private String deliveryAddress;
