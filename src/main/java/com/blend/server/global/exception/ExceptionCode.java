@@ -12,6 +12,8 @@ public enum ExceptionCode {
 
     REVIEW_NOT_FOUND(404,"해당 리뷰가 존재하지 않습니다."),
 
+    ANSWER_NOT_FOUND(404,"해당 답변이 존재하지 않습니다."),
+
     REVIEW_REMOVED(403,"삭제된 리뷰 입니다."),
 
     QUANTITY_EXCEEDED(404,"제품 수량을 초과했습니다."),
@@ -37,7 +39,7 @@ public enum ExceptionCode {
 
     SELLER_NOT_FOUND(404, "존재하지 않는 판매자 입니다."),
 
-    ADMIN_NOT_FOUND(404, "존재하지 않는 판매자 입니다."),
+    ADMIN_NOT_FOUND(404, "존재하지 않는 관리자 입니다."),
 
     SELLER_WAIT(404, "가입 대기 중인 판매자입니다."),
 

@@ -1,5 +1,6 @@
 package com.blend.server.review;
 
+import com.blend.server.answer.AnswerResponseDto;
 import com.blend.server.reviewImage.ReviewImage;
 import lombok.*;
 
@@ -25,14 +26,16 @@ public class ReviewDetailResponseDto {
 
     private LocalDateTime createdAt;
 
+    private List<AnswerResponseDto> answerList;
+
     public String getReviewStatus(){
         return reviewStatus.getDescription();
     }
 
     @Builder
-    public ReviewDetailResponseDto(long id, String title, String content,
-                                   int score, Review.ReviewStatus reviewStatus,
-                                   List<String> reviewImageUrls, LocalDateTime createdAt) {
+    public ReviewDetailResponseDto(long id, String title, String content, int score,
+                                   Review.ReviewStatus reviewStatus, List<String> reviewImageUrls,
+                                   LocalDateTime createdAt, List<AnswerResponseDto> answerList) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -40,5 +43,6 @@ public class ReviewDetailResponseDto {
         this.reviewStatus = reviewStatus;
         this.reviewImageUrls = reviewImageUrls;
         this.createdAt = createdAt;
+        this.answerList = answerList;
     }
 }

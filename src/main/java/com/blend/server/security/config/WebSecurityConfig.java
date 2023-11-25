@@ -96,6 +96,14 @@ public class WebSecurityConfig {
                         .antMatchers(HttpMethod.DELETE,"/carts").hasRole("USER")
                         .antMatchers(HttpMethod.GET,"/admins/**").hasRole("ADMIN")
                         .antMatchers(HttpMethod.PATCH,"/admins/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.POST,"/reviews").hasRole("USER")
+                        .antMatchers(HttpMethod.PATCH,"/reviews/{id}").hasRole("USER")
+                        .antMatchers(HttpMethod.GET,"/reviews/my-reviews").hasRole("USER")
+                        .antMatchers(HttpMethod.PATCH,"/reviews/removed/**").hasAnyRole("USER")
+                        .antMatchers(HttpMethod.POST,"/answers/**").hasRole("SELLER")
+                        .antMatchers(HttpMethod.PATCH,"/answers/**").hasRole("SELLER")
+                        .antMatchers(HttpMethod.GET,"/answers/my-answers").hasRole("SELLER")
+                        .antMatchers(HttpMethod.DELETE,"/answers/**").hasRole("SELLER")
 
 
 
@@ -104,7 +112,6 @@ public class WebSecurityConfig {
 
         return http.build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

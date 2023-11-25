@@ -111,7 +111,7 @@ public class ReviewController {
     public ResponseEntity deleteReviews (@PathVariable long id,
                                          @AuthenticationPrincipal User user){
 
-        Review review = reviewService.deleteReview(id,user);
+        Review review = reviewService.deleteUserReview(id,user);
         return new ResponseEntity<>(mapper.reviewToReviewResponseDto(review,domain),HttpStatus.OK);
     }
 

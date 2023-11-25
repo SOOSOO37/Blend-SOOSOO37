@@ -1,5 +1,6 @@
 package com.blend.server.review;
 
+import com.blend.server.answer.Answer;
 import com.blend.server.global.audit.Auditable;
 import com.blend.server.product.Product;
 import com.blend.server.reviewImage.ReviewImage;
@@ -48,6 +49,9 @@ public class Review extends Auditable {
     @OneToMany(mappedBy = "review",cascade = CascadeType.ALL)
     private List<ReviewImage> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Answer> answers = new ArrayList<>();
+
     public enum ReviewStatus{
 
         REVIEW_ACTIVE(1, "작성된 리뷰"),
@@ -68,6 +72,13 @@ public class Review extends Auditable {
         this.images.add(image);
         if(image.getReview() != this){
             image.addReview(this);
+        }
+    }
+
+    public void addAnswer(Answer answer) {
+        this.answers.add(answer);
+        if (answer.getReview() != this) {
+            answer.setReview(this);
         }
     }
 }
