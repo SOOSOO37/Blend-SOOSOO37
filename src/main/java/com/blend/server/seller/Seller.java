@@ -1,8 +1,10 @@
 package com.blend.server.seller;
 
+import com.blend.server.answer.Answer;
 import com.blend.server.product.Product;
 import com.blend.server.global.audit.Auditable;
 import com.blend.server.order.Order;
+import com.blend.server.review.Review;
 import com.blend.server.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
@@ -66,10 +68,13 @@ public class Seller extends Auditable implements Principal {
     @OneToMany(mappedBy = "seller", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Product> product;
 
-
     @JsonBackReference
     @OneToMany(mappedBy = "seller", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Order> orders = new ArrayList<>();
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "seller", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Answer> answers;
 
     public enum SellerStatus {
 
