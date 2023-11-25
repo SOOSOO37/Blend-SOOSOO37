@@ -1,5 +1,6 @@
 package com.blend.server.review;
 
+import com.blend.server.answer.AnswerResponseDto;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
 import com.blend.server.product.Product;
@@ -41,6 +42,15 @@ public interface ReviewMapper {
                 })
                 .collect(Collectors.toList());
 
+        List<AnswerResponseDto> answerResponseDtos = review.getAnswers().stream()
+                        .map(answer -> {
+                            AnswerResponseDto answerResponseDto = new AnswerResponseDto();
+                            BeanUtils.copyProperties(answer,answerResponseDto);
+                            return answerResponseDto;
+                        })
+                                .collect(Collectors.toList());
+
+
         response.setId(review.getId());
         response.setTitle(review.getTitle());
         response.setContent(review.getContent());
@@ -48,6 +58,7 @@ public interface ReviewMapper {
         response.setReviewStatus(review.getReviewStatus());
         response.setReviewImageUrls(links);
         response.setCreatedAt(review.getCreatedAt());
+        response.setAnswerList(answerResponseDtos);
 
         return response;
     }

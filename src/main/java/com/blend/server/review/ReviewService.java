@@ -98,7 +98,7 @@ public class ReviewService {
 
 
 
-    public Review deleteReview(long id, User user){
+    public Review deleteUserReview(long id, User user){
         Review findReview = findReviewByUser(id,user);
         verifyUser(id, user.getId());
         findReview.setReviewStatus(Review.ReviewStatus.REVIEW_DELETE);
