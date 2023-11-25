@@ -1,6 +1,6 @@
 package com.blend.server.productImage;
 
-import com.blend.server.Product.ProductService;
+import com.blend.server.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

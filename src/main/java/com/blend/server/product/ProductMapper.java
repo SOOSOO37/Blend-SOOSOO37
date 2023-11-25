@@ -1,9 +1,10 @@
-package com.blend.server.Product;
+package com.blend.server.product;
 
 import com.blend.server.category.Category;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
 import com.blend.server.productImage.ProductImage;
+import com.blend.server.review.ReviewDetailResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.BeanUtils;
@@ -57,6 +58,29 @@ public interface ProductMapper {
                 .collect(Collectors.toList());
 
         productDetailResponseDto.setImageLinks(productImageLink);
+
+
+        List<ReviewDetailResponseDto> response= product.getReviews().stream()
+                        .map(review -> {
+                            ReviewDetailResponseDto reviewDetailResponseDto = new ReviewDetailResponseDto();
+                            List<String> links = review.getImages().stream()
+                                    .map(reviewImage -> {
+                                        String link = domain+"/review-images/"+reviewImage.getId();
+                                        return link;
+                                    })
+                                    .collect(Collectors.toList());
+                            reviewDetailResponseDto.setId(review.getId());
+                            reviewDetailResponseDto.setTitle(review.getTitle());
+                            reviewDetailResponseDto.setReviewStatus(review.getReviewStatus());
+                            reviewDetailResponseDto.setScore(review.getScore());
+                            reviewDetailResponseDto.setContent(review.getContent());
+                            reviewDetailResponseDto.setCreatedAt(review.getCreatedAt());
+                            reviewDetailResponseDto.setReviewImageUrls(links);
+                            return reviewDetailResponseDto;
+                        })
+                                .collect(Collectors.toList());
+        productDetailResponseDto.setReviewList(response);
+
         BeanUtils.copyProperties(product, productDetailResponseDto);
 
         return productDetailResponseDto;

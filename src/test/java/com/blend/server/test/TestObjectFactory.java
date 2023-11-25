@@ -1,14 +1,11 @@
 package com.blend.server.test;
 
-import com.blend.server.Product.Product;
+import com.blend.server.product.Product;
 import com.blend.server.category.Category;
 import com.blend.server.order.Order;
-import com.blend.server.orderproduct.OrderProduct;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestObjectFactory {
 

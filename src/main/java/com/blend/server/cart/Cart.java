@@ -1,9 +1,7 @@
 package com.blend.server.cart;
 
-import com.blend.server.Product.Product;
 import com.blend.server.global.audit.Auditable;
 import com.blend.server.user.User;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.blend.server.Product;
+package com.blend.server.product;
 
 import lombok.*;
 

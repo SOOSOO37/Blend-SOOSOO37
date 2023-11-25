@@ -1,33 +1,23 @@
 package com.blend.server.seller;
 
-import com.blend.server.Product.Product;
-import com.blend.server.Product.ProductDetailResponseDto;
-import com.blend.server.Product.ProductMapper;
-import com.blend.server.Product.ProductResponseDto;
+import com.blend.server.product.Product;
+import com.blend.server.product.ProductMapper;
+import com.blend.server.product.ProductResponseDto;
 import com.blend.server.global.response.MultiResponseDto;
 import com.blend.server.global.utils.UriCreator;
-import com.blend.server.order.Order;
 import com.blend.server.order.OrderMapper;
-import com.blend.server.order.OrderResponseDto;
-import com.blend.server.user.User;
-import com.blend.server.user.UserResponseDto;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
-import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor

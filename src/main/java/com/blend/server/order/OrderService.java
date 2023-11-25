@@ -1,7 +1,7 @@
 package com.blend.server.order;
 
-import com.blend.server.Product.Product;
-import com.blend.server.Product.ProductService;
+import com.blend.server.product.Product;
+import com.blend.server.product.ProductService;
 import com.blend.server.cart.Cart;
 import com.blend.server.cart.CartProductRepository;
 import com.blend.server.cart.CartService;
@@ -10,8 +10,6 @@ import com.blend.server.global.exception.ExceptionCode;
 import com.blend.server.orderproduct.OrderProduct;
 import com.blend.server.user.User;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
-import org.mapstruct.control.MappingControl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

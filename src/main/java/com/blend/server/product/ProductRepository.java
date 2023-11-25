@@ -1,13 +1,11 @@
-package com.blend.server.Product;
+package com.blend.server.product;
 
 import com.blend.server.category.Category;
 import com.blend.server.seller.Seller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.parameters.P;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 

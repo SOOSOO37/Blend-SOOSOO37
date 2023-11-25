@@ -1,6 +1,6 @@
 package com.blend.server.productImage;
 
-import com.blend.server.Product.ProductService;
+import com.blend.server.product.ProductService;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;

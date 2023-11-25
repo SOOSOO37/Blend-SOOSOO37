@@ -4,6 +4,7 @@ import com.blend.server.admin.Admin;
 import com.blend.server.cart.Cart;
 import com.blend.server.global.audit.Auditable;
 import com.blend.server.order.Order;
+import com.blend.server.review.Review;
 import com.blend.server.seller.Seller;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
@@ -62,6 +63,10 @@ public class User extends Auditable implements Principal{
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Order> orderList;
 
+    @JsonBackReference
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Review> reviews;
+
     public User(String username, String s, List<GrantedAuthority> authorities) {
         super();
     }
@@ -98,4 +103,11 @@ public class User extends Auditable implements Principal{
         this.cart = cart;
     }
 
+    public void addReview(Review review) {
+        if(this.reviews == null){
+           this.reviews = new ArrayList<>();
+        }
+        this.reviews.add(review);
+        review.setUser(this);
+    }
 }

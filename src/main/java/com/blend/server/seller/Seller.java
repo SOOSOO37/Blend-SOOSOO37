@@ -1,6 +1,6 @@
 package com.blend.server.seller;
 
-import com.blend.server.Product.Product;
+import com.blend.server.product.Product;
 import com.blend.server.global.audit.Auditable;
 import com.blend.server.order.Order;
 import com.blend.server.user.User;

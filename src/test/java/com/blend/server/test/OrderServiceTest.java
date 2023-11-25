@@ -1,12 +1,11 @@
 package com.blend.server.test;
 
-import com.blend.server.Product.Product;
-import com.blend.server.Product.ProductService;
+import com.blend.server.product.Product;
+import com.blend.server.product.ProductService;
 import com.blend.server.order.Order;
 import com.blend.server.order.OrderRepository;
 import com.blend.server.order.OrderService;
 import com.blend.server.orderproduct.OrderProduct;
-import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,7 +15,6 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.any;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;

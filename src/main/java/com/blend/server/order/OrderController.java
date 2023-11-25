@@ -78,7 +78,7 @@ public class OrderController {
     }
 
     @ApiOperation(value = "주문 취소 API")
-    @PatchMapping("cancel/{id}")
+    @PatchMapping("/cancel/{id}")
     public ResponseEntity cancelOrder(@PathVariable long id,
                                       @AuthenticationPrincipal User user){
         Order order = service.cancelOrder(user,id);

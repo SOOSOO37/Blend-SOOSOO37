@@ -1,6 +1,5 @@
-package com.blend.server.Product;
+package com.blend.server.product;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

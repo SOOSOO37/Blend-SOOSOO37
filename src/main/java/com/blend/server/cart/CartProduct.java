@@ -1,6 +1,6 @@
 package com.blend.server.cart;
 
-import com.blend.server.Product.Product;
+import com.blend.server.product.Product;
 import com.blend.server.global.audit.Auditable;
 import lombok.Builder;
 import lombok.Getter;

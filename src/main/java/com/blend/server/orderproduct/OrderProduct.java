@@ -1,13 +1,10 @@
 package com.blend.server.orderproduct;
 
-import com.blend.server.Product.Product;
+import com.blend.server.product.Product;
 import com.blend.server.global.audit.Auditable;
 import com.blend.server.order.Order;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 @Setter

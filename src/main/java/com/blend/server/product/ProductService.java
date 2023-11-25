@@ -1,10 +1,9 @@
-package com.blend.server.Product;
+package com.blend.server.product;
 
 import com.blend.server.category.Category;
 import com.blend.server.category.CategoryRepository;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
-import com.blend.server.orderproduct.OrderProduct;
 import com.blend.server.productImage.ProductImage;
 import com.blend.server.productImage.ProductImageRepository;
 import com.blend.server.seller.Seller;
@@ -19,10 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -113,6 +109,7 @@ public class ProductService {
         if(optionalProduct.isPresent()){
             Product product = optionalProduct.get();
             product.setViewCount(product.getViewCount()+1);
+            product.setReviewCount(product.getReviews().size());
             this.productRepository.save(product);
             log.info("Find Product: {}",product);
             return product;

@@ -1,10 +1,9 @@
 package com.blend.server.cart;
 
-import com.blend.server.Product.Product;
-import com.blend.server.Product.ProductService;
+import com.blend.server.product.Product;
+import com.blend.server.product.ProductService;
 import com.blend.server.global.exception.BusinessLogicException;
 import com.blend.server.global.exception.ExceptionCode;
-import com.blend.server.order.Order;
 import com.blend.server.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
