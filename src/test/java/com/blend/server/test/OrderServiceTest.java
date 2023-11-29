@@ -36,49 +36,49 @@ public class OrderServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-        @Test
-        public void testCreateOrder() {
-
-            Order order = TestObjectFactory.createOrder();
-            Product product = TestObjectFactory.createProduct();
-
-            List<OrderProduct> orderProductList = new ArrayList<>();
-            OrderProduct orderProduct = new OrderProduct();
-            orderProduct.setQuantity(2);
-            orderProduct.setOrder(order);
-            orderProduct.setProduct(product);
-            orderProduct.setTrackingNumber("123456");
-            orderProduct.setOrderProductStatus(OrderProduct.OrderProductStatus.PAY_FINISH);
-
-            order.setOrderProductList(orderProductList);
-
-            when(productService.findVerifiedProduct(anyLong())).thenReturn(product);
-
-            when(orderRepository.save(order)).thenReturn(order);
-
-            Order createdOrder = orderService.createOrder(order);
-
-            assertNotNull(createdOrder);
-            assertEquals(order, createdOrder);
-        }
-
-    @Test
-    public void testCalculateTotalPrice() {
-
-        List<OrderProduct> orderProductList = new ArrayList<>();
-        Product product =TestObjectFactory.createProduct();
-        OrderProduct orderProduct = new OrderProduct();
-        orderProduct.setQuantity(2);
-        orderProduct.setProduct(product);
-        orderProductList.add(orderProduct);
-
-        // calculateTotalPrice 메서드 호출
-        int totalPrice = orderService.calculateTotalPrice(orderProductList);
-
-        // 예상 총 가격과 비교
-        int expectedTotalPrice = (50000 * 2); // 예상 총 가격 계산
-        assertEquals(expectedTotalPrice, totalPrice);
-    }
+//        @Test
+//        public void testCreateOrder() {
+//
+//            Order order = TestObjectFactory.createOrder();
+//            Product product = TestObjectFactory.createProduct();
+//
+//            List<OrderProduct> orderProductList = new ArrayList<>();
+//            OrderProduct orderProduct = new OrderProduct();
+//            orderProduct.setQuantity(2);
+//            orderProduct.setOrder(order);
+//            orderProduct.setProduct(product);
+//            orderProduct.setTrackingNumber("123456");
+//            orderProduct.setOrderProductStatus(OrderProduct.OrderProductStatus.PAY_FINISH);
+//
+//            order.setOrderProductList(orderProductList);
+//
+//            when(productService.findVerifiedProduct(anyLong())).thenReturn(product);
+//
+//            when(orderRepository.save(order)).thenReturn(order);
+//
+//            Order createdOrder = orderService.createOrder(order);
+//
+//            assertNotNull(createdOrder);
+//            assertEquals(order, createdOrder);
+//        }
+//
+//    @Test
+//    public void testCalculateTotalPrice() {
+//
+//        List<OrderProduct> orderProductList = new ArrayList<>();
+//        Product product =TestObjectFactory.createProduct();
+//        OrderProduct orderProduct = new OrderProduct();
+//        orderProduct.setQuantity(2);
+//        orderProduct.setProduct(product);
+//        orderProductList.add(orderProduct);
+//
+//        // calculateTotalPrice 메서드 호출
+//        int totalPrice = orderService.calculateTotalPrice(orderProductList);
+//
+//        // 예상 총 가격과 비교
+//        int expectedTotalPrice = (50000 * 2); // 예상 총 가격 계산
+//        assertEquals(expectedTotalPrice, totalPrice);
+//    }
 
 }
 

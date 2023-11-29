@@ -83,7 +83,7 @@ public class UserService {
         user.setRoles(roles);
     }
 
-    private void setEncodedPassword(User user) {
+    public void setEncodedPassword(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
     }
 
@@ -117,13 +117,13 @@ public class UserService {
             throw new BusinessLogicException(ExceptionCode.USER_NICKNAME_EXISTS);
     }
 
-    private void manageCart(User user){
+    public void manageCart(User user){
         if(user.getRoles().contains("ADMIN")|| user.getRoles().contains("SELLER")){
             user.setCart(null);
         }
     }
 
-    private void makeUserCart(User user) {
+    public void makeUserCart(User user) {
         Cart cart = new Cart();
         cart.setUser(user);
         user.setCart(cart);

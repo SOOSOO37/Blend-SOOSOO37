@@ -2,6 +2,7 @@ package com.blend.server.security.utils;
 
 import com.blend.server.seller.Seller;
 import com.blend.server.user.User;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 @Component
 public class CustomAuthorityUtils {
 
+    @Setter
     @Value("${config.admin}")
     private String adminEmail;
 
@@ -61,5 +63,4 @@ public class CustomAuthorityUtils {
         }else
         return USER_ROLES;
     }
-
 }
