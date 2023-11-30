@@ -59,7 +59,7 @@ public class SellerService {
                 .ifPresent(name -> findSeller.setName(name));
         Optional.ofNullable(seller.getAddress())
                 .ifPresent(address -> findSeller.setAddress(address));
-        Optional.ofNullable(seller.getPassword())
+        Optional.ofNullable(seller.getPhone())
                 .ifPresent(phone -> findSeller.setPhone(phone));
 
         return sellerRepository.save(findSeller);
