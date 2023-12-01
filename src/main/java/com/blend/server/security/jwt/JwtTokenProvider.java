@@ -140,7 +140,9 @@ public class JwtTokenProvider {
     }
 
     public void verifySignature(String jws, String base64EncodedSecretKey) {
-        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        //Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
+
 
         Jwts.parserBuilder()
                 .setSigningKey(key)
