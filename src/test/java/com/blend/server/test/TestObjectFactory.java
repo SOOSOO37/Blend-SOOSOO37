@@ -24,6 +24,7 @@ public class TestObjectFactory {
 
     public static Product createProduct() {
         Product product = new Product();
+        product.setId(1L);
         product.setProductName("제품명");
         product.setBrand("브랜드");
         product.setPrice(50000);
