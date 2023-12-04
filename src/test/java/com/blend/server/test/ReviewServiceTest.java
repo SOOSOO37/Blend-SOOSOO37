@@ -186,11 +186,9 @@ public class ReviewServiceTest {
     @Test
     @DisplayName("상품에 생성된 리뷰 조회 테스트")
     public void findProductReviewsTest(){
-        // 상품 ID 생성
         Product product = new Product();
         product.setId(1L);
 
-        // 가상의 상품 리뷰 목록 생성
         List<Review> reviews = Arrays.asList(
                 createReview(1L, "리뷰 1",product),
                 createReview(2L, "리뷰 2",product),
