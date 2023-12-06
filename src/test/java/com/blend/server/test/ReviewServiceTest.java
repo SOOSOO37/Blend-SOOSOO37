@@ -152,7 +152,6 @@ public class ReviewServiceTest {
         User user = new User();
         user.setId(1L);
 
-        // 가상의 사용자 리뷰 목록 생성
         List<Review> userReviews = Arrays.asList(
                 createReview(1L, user, "리뷰 1"),
                 createReview(2L, user, "리뷰 2"),
@@ -166,10 +165,8 @@ public class ReviewServiceTest {
                 PageRequest.of(0, 10, Sort.by("createdAt").descending())
         )).thenReturn(new PageImpl<>(userReviews));
 
-        // 테스트 대상 메서드 호출
         Page<Review> result = reviewService.findUserReviews(10, 1, user);
 
-        // 결과 검증
         assertNotNull(result);
         assertEquals(userReviews.size(), result.getContent().size());
     }
