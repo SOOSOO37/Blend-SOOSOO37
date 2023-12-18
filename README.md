@@ -1,1 +1,2 @@
-# Blend-SOOSOO37
+# Blend 멀티 브랜드 쇼핑몰 프로젝트
+
