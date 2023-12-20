@@ -5,6 +5,7 @@ import com.blend.server.seller.Seller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 
 
 @Api(tags = "OrderProduct API Controller")
+@Slf4j
 @RequestMapping("/orderProducts")
 @RequiredArgsConstructor
 @RestController
@@ -33,9 +35,10 @@ public class OrderProductController {
                                                @RequestParam int size,
                                                @AuthenticationPrincipal Seller seller){
 
+        log.info("Inquiring OrderProduct");
         Page<OrderProduct> orderProductPage = orderProductService.findAllOrderProductBySeller(page -1,size,seller);
         List<OrderProduct> orderProductList = orderProductPage.getContent();
-
+        log.info("Found OrderProduct for seller : {}", seller.getId());
         return new ResponseEntity<>(new MultiResponseDto<>
                 (mapper.orderProductListToOrderProcutSellerResponseDtos(orderProductList),orderProductPage), HttpStatus.OK);
     }
@@ -46,8 +49,10 @@ public class OrderProductController {
     public ResponseEntity updateOrderStatus(@PathVariable("orderProduct-id") long orderProductId,
                                             @RequestBody OrderProductUpdateDto orderProductUpdateDto,
                                             @AuthenticationPrincipal Seller seller){
+        log.info("---Updating OrderProduct---");
         OrderProduct orderProduct = orderProductService.updateOrderStatus(orderProductId, orderProductUpdateDto,seller);
         OrderProductSellerResponseDto response = mapper.orderProductToOrderSellerResponseDto(orderProduct);
+        log.info("Updated  OrderProduct : {}, Seller : {}", orderProductId, seller.getId());
 
         return new ResponseEntity<>(response,HttpStatus.OK);
     }

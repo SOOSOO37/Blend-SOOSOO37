@@ -56,8 +56,11 @@ public class ProductService {
                         })
                         .collect(Collectors.toList());
             }
-            return productRepository.save(product);
+            Product savedProduct = productRepository.save(product);
+            log.info("Created  Product : {}", savedProduct.getId());
+            return savedProduct;
         }
+        log.warn("Seller not found");
         throw new BusinessLogicException(ExceptionCode.SELLER_NOT_FOUND);
     }
 
@@ -82,6 +85,7 @@ public class ProductService {
     }
 
     private Product findProductBySeller(long productId, Seller seller) {
+        log.info("---Finding Product by Seller---");
         return productRepository.findByIdAndSeller(productId, seller)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PRODUCT_NOT_FOUND));
     }
@@ -103,7 +107,7 @@ public class ProductService {
 
 
     public Product findProduct(long id){
-        log.info("---Inquiring Product---",id);
+        log.info("---Inquiring Product {}---",id);
         Optional<Product> optionalProduct = productRepository.findById(id);
 
         if(optionalProduct.isPresent()){
@@ -114,7 +118,7 @@ public class ProductService {
             log.info("Find Product: {}",product);
             return product;
         }else {
-            log.warn("---Product Not Found---",id);
+            log.warn("---Product Not Found {} ---",id);
             throw new BusinessLogicException(ExceptionCode.PRODUCT_NOT_FOUND);
         }
 
@@ -172,11 +176,13 @@ public class ProductService {
     }
 
     public void changeProductStatus(Product product) {
+        log.info("---Changing Product Status---");
         if (ProductCountRange(product.getProductCount())) {
             product.setProductStatus(Product.ProductStatus.INSTOCK);
         } else if (product.getProductCount() == 0) {
             product.setProductStatus(Product.ProductStatus.SOLDOUT);
         }
+        log.info("Product status changed Product ID: {}, Status: {}", product.getId(), product.getProductStatus());
     }
 
     private boolean ProductCountRange(int productCount) {
@@ -184,12 +190,15 @@ public class ProductService {
     }
 
     public void verifySeller(long productId, long sellerId){
+        log.info("---Verifying Seller---");
         Product findProduct = findVerifiedProduct(productId);
         long dbSellerId = findProduct.getSeller().getId();
 
         if(sellerId != dbSellerId){
+            log.warn("Seller{} is not authorized to access product {}", sellerId, productId);
             throw new BusinessLogicException(ExceptionCode.SELLER_NOT_FOUND);
         }
+        log.info("Verified Seller : {}, Product ID: {}", sellerId, productId);
     }
 
 

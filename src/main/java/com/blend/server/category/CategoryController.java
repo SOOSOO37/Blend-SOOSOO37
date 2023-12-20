@@ -4,6 +4,7 @@ import com.blend.server.global.utils.UriCreator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.net.URI;
 import java.util.List;
 
 @Api(tags = "Category API Controller")
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/categories")
@@ -27,9 +29,9 @@ public class CategoryController {
     @PostMapping
     @ApiOperation(value = "카테고리 생성 API")
     public ResponseEntity createCategory(@RequestBody CategoryCreateDto categoryCreateDto){
-
+        log.info("-------Creating Category-------");
         Category category = categoryService.createCategory(mapper.categoryPostDtoToCategory(categoryCreateDto));
-
+        log.info("-------Creating Category : {} -------", category.getId());
         URI location = UriCreator.createUri(CATEGORY_DEFAULT_URL,category.getId());
 
         return ResponseEntity.created(location).build();
@@ -41,9 +43,11 @@ public class CategoryController {
     public ResponseEntity findAllCategories(@RequestParam int page,
                                             @RequestParam int size){
 
-
+        log.info("Finding All Categories - Page: {}, Size: {}", page, size);
         Page<Category> categories = categoryService.findAllCategory(page -1, size);
         List<Category> productList = categories.getContent();
+        log.info("Found Categories - Page: {}, Size: {}, Total Categories: {}",
+                page, size, categories.getTotalElements());
 
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }

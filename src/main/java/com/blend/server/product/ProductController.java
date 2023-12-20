@@ -8,6 +8,7 @@ import com.blend.server.global.utils.UriCreator;
 import com.blend.server.productImage.ProductImage;
 import com.blend.server.seller.Seller;
 import com.blend.server.seller.SellerService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URI;
 import java.util.List;
 
-
+@Api(tags = "Product API Controller")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/products")
@@ -44,6 +45,7 @@ public class ProductController {
     private final ProductMapper mapper;
 
 
+    @ApiOperation(value = "상품 등록 API")
     @PostMapping
     public ResponseEntity postProduct(@RequestPart(name = "post") ProductCreateDto productCreateDto,
                                       @RequestPart(required = false, name = "imageFiles") List<MultipartFile> imageFiles,
