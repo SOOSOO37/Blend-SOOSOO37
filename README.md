@@ -40,8 +40,11 @@
 - [요구사항 정의서](https://github.com/SOOSOO37/Blend-SOOSOO37/files/13818008/Blend.-.pdf)
 - [API 명세서](https://github.com/SOOSOO37/Blend-SOOSOO37/files/13818029/Blend.-.API.pdf)
 - [Swagger](https://github.com/SOOSOO37/Blend-SOOSOO37/files/13821172/html2-client-generated.zip)
-- [ERD](https://github.com/SOOSOO37/Blend-SOOSOO37/assets/115699805/aa8486b1-1da1-4bb7-bb8f-d592b986330f)
-
+- ERD
+  
+<p align="center">
+  <img src="https://github.com/SOOSOO37/Blend-SOOSOO37/assets/115699805/aa8486b1-1da1-4bb7-bb8f-d592b986330f">
+</p>
 
 <br>
 
